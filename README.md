@@ -12,3 +12,8 @@ Ongoing: Gun bying in game, Login with google, bomb plant play mode...
 # How to setup the game in Unity
 You can create your own pun 2 "app" on photon to run the project netwoking
 Or you can use my app ID if it's not include in the project from the begining: 0c9e00a6-f041-4184-b593-fc9f6b154483
+
+# Link to Download a demo
+https://drive.google.com/drive/folders/1Vcm5T-4J5Kk-7sT5YRAkHrCfnfWwDZVm?usp=sharing
+
+# Path currently on 0.2
