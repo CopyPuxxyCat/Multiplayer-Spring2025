@@ -15,5 +15,6 @@ Or you can use my app ID if it's not include in the project from the begining: 0
 
 # Link to Download a demo
 https://drive.google.com/drive/folders/1Vcm5T-4J5Kk-7sT5YRAkHrCfnfWwDZVm?usp=sharing
+Download all the file in folder, run ChuyenDe_GameOnline_Spring2025 file to play
 
 # Path currently on 0.2
