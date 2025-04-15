@@ -7,3 +7,8 @@
 
 It includes core multiplayer mechanics such as player movement, shooting, and synchronization, offering a responsive and seamless gameplay experience.
 Ongoing: Gun bying in game, Login with google, bomb plant play mode...
+
+
+# How to setup the game in Unity
+You can create your own pun 2 "app" on photon to run the project netwoking
+Or you can use my app ID if it's not include in the project from the begining: 0c9e00a6-f041-4184-b593-fc9f6b154483
