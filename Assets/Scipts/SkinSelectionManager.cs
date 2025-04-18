@@ -46,6 +46,16 @@ public class SkinSelectionManager : MonoBehaviour
     public void ToggleSkinPanel(bool state)
     {
         SkinPickScreen.SetActive(state);
+
+        // Bật/tắt con trỏ chuột
+        Cursor.visible = state;
+        Cursor.lockState = state ? CursorLockMode.None : CursorLockMode.Locked;
+
+        // Vô hiệu hóa khả năng bắn
+        if (playerController != null)
+        {
+            playerController.canShoot = !state;
+        }
     }
 }
 

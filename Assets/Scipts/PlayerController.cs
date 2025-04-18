@@ -18,7 +18,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     private Vector3 MoveDirection, /*this variable to move in camera direction*/Movement;
 
     public CharacterController characterController;
-    private Camera camera;
+    private Camera cameraM;
     public float JumpForce = 12f, GravityMod = 2.5f;
     public Transform GroundCheckPoint;
     private bool IsGrounded;
@@ -38,6 +38,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     // gun switching
     public Gun[] AllGuns;
     private int SelectedGun;
+    public bool canShoot = true;
 
     public GameObject PlayerHitImpact;
 
@@ -60,7 +61,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
-        camera = Camera.main;
+        cameraM = Camera.main;
         UIController.instance.WeaponTemperatureSlider.maxValue = MaxHeat;
         //SwitchGun();
         CurrentHealth = MaxHealth;
@@ -97,11 +98,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
-        // Nhấn "L" để bật/tắt bảng chọn skin
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            ToggleSkinPanel();
-        }
+        
         /// If current player is owner than only update
         if (photonView.IsMine)
         {
@@ -249,12 +246,12 @@ public class PlayerController : MonoBehaviourPunCallbacks
             /// Aim down sight when right click
             if(Input.GetMouseButton(1)) 
             {
-                camera.fieldOfView = Mathf.Lerp(camera.fieldOfView, AllGuns[SelectedGun].ADSZoom, ADSSpeed * Time.deltaTime);
+                cameraM.fieldOfView = Mathf.Lerp(cameraM.fieldOfView, AllGuns[SelectedGun].ADSZoom, ADSSpeed * Time.deltaTime);
                 GunHolder.position = Vector3.Lerp(GunHolder.position, ADSInPoint.position, ADSSpeed * Time.deltaTime);
             }
             else
             {
-                camera.fieldOfView = Mathf.Lerp(camera.fieldOfView, 60f, ADSSpeed * Time.deltaTime);
+                cameraM.fieldOfView = Mathf.Lerp(cameraM.fieldOfView, 60f, ADSSpeed * Time.deltaTime);
                 GunHolder.position = Vector3.Lerp(GunHolder.position, ADSOutPoint.position, ADSSpeed * Time.deltaTime);
             }
 
@@ -287,6 +284,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_UpdateSkin(int skinID)
     {
+        Debug.Log("chon skin: " + skinID);
         if (skinID >= 0 && skinID < AllSkins.Length)
         {
             PlayerModel.GetComponent<Renderer>().material = AllSkins[skinID];
@@ -305,9 +303,11 @@ public class PlayerController : MonoBehaviourPunCallbacks
     // end skin pick
     private void Shoot()
     {
+        if(canShoot == false) { return; }
+            
         /// center of the screen
-        Ray ray = camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
-        ray.origin = camera.transform.position;
+        Ray ray = cameraM.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+        ray.origin = cameraM.transform.position;
 
         /// get information of what the ray hit
         if(Physics.Raycast(ray, out RaycastHit hit))
@@ -376,13 +376,13 @@ public class PlayerController : MonoBehaviourPunCallbacks
         {
             if(MatchManager.instance.State == MatchManager.GameState.Playing)
             {
-                camera.transform.position = ViewPoint.position;
-                camera.transform.rotation = ViewPoint.rotation;
+                cameraM.transform.position = ViewPoint.position;
+                cameraM.transform.rotation = ViewPoint.rotation;
             }
             else
             {
-                camera.transform.position = MatchManager.instance.MapCamPoint.position;
-                camera.transform.rotation = MatchManager.instance.MapCamPoint.rotation;
+                cameraM.transform.position = MatchManager.instance.MapCamPoint.position;
+                cameraM.transform.rotation = MatchManager.instance.MapCamPoint.rotation;
             }
         }
     }

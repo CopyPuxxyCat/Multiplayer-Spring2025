@@ -532,6 +532,7 @@ MonoBehaviour:
   - {fileID: 3996294801409250731}
   - {fileID: 3996294800193357121}
   - {fileID: 3996294801331046219}
+  canShoot: 1
   PlayerHitImpact: {fileID: 7970841168402046768, guid: d40239cac23673b43b8c288c6a7a0bc9, type: 3}
   MaxHealth: 200
   PlayerAnimator: {fileID: 1046021142001106604}
