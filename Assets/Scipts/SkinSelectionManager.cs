@@ -4,20 +4,25 @@ using Photon.Pun;
 
 public class SkinSelectionManager : MonoBehaviour
 {
+    #region Public Variables
     public static SkinSelectionManager Instance;
 
-    public GameObject SkinPickScreen; // Bảng chọn skin
-    public Button[] SkinButtons; // Các nút chọn skin
+    public GameObject SkinPickScreen; 
+    public Button[] SkinButtons; 
     private PlayerController playerController;
+    #endregion
+
+    #region Methods and Overrides
 
     void Awake()
     {
         Instance = this;
     }
 
+
     void Start()
     {
-        SkinPickScreen.SetActive(false); // Ẩn menu chọn skin ban đầu
+        SkinPickScreen.SetActive(false); 
 
         if (PhotonNetwork.LocalPlayer != null)
         {
@@ -30,7 +35,7 @@ public class SkinSelectionManager : MonoBehaviour
 
         for (int i = 0; i < SkinButtons.Length; i++)
         {
-            int skinIndex = i; // Cần biến cục bộ để tránh lỗi delegate
+            int skinIndex = i; 
             SkinButtons[i].onClick.AddListener(() => SelectSkin(skinIndex));
         }
     }
@@ -47,15 +52,14 @@ public class SkinSelectionManager : MonoBehaviour
     {
         SkinPickScreen.SetActive(state);
 
-        // Bật/tắt con trỏ chuột
         Cursor.visible = state;
         Cursor.lockState = state ? CursorLockMode.None : CursorLockMode.Locked;
 
-        // Vô hiệu hóa khả năng bắn
         if (playerController != null)
         {
             playerController.canShoot = !state;
         }
     }
+    #endregion
 }
 
