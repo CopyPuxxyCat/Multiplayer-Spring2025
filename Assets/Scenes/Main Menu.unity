@@ -5383,6 +5383,22 @@ PrefabInstance:
       propertyPath: m_text
       value: Create test room
       objectReference: {fileID: 0}
+    - target: {fileID: 2894991212608102151, guid: 98d8d0839cb5f0b49b00272b12e34ff5, type: 3}
+      propertyPath: m_fontSize
+      value: 36
+      objectReference: {fileID: 0}
+    - target: {fileID: 2894991212608102151, guid: 98d8d0839cb5f0b49b00272b12e34ff5, type: 3}
+      propertyPath: m_fontStyle
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 2894991212608102151, guid: 98d8d0839cb5f0b49b00272b12e34ff5, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 36
+      objectReference: {fileID: 0}
+    - target: {fileID: 2894991212608102151, guid: 98d8d0839cb5f0b49b00272b12e34ff5, type: 3}
+      propertyPath: m_enableAutoSizing
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6015,7 +6031,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1264685725
 RectTransform:
   m_ObjectHideFlags: 0
