@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 using Photon.Pun;
 
@@ -13,6 +12,7 @@ public class JettController : MonoBehaviourPun
     [SerializeField] GameObject smokeBallPrefab;
     [SerializeField] Transform smokeFiringTransform;
 
+    [Header("Skill UI")]
     private SkillUIEntry dashUI;
     private SkillUIEntry smokeUI;
     private SkillUIEntry updraftUI;
@@ -30,28 +30,30 @@ public class JettController : MonoBehaviourPun
 
     private float lastYVelocity = 0f;
 
-    private CharacterController characterController;
+    private PlayerController playerController;
     private JettStats jettStats;
 
-    private const float DefaultGravity = -24.525f; // Assuming gravityMod = 2.5
+    private const float DefaultGravity = -24.525f;
     private float currentGravity = DefaultGravity;
     private Vector3 velocity;
     private bool isGrounded = true;
 
     void Start()
     {
-        characterController = GetComponent<CharacterController>();
+        if (!photonView.IsMine) return;
+
+        playerController = GetComponent<PlayerController>();
         jettStats = GetComponent<JettStats>();
         playerCamera = Camera.main;
 
-        dashUI = UIController.instance.dashUI;
-        smokeUI = UIController.instance.smokeUI;
-        updraftUI = UIController.instance.updraftUI;
-        ultimateUI = UIController.instance.ultimateUI;
+        var ui = UIController.instance;
+        AssignSkillUI(ui.dashUI, ui.smokeUI, ui.updraftUI, ui.ultimateUI);
     }
 
     void Update()
     {
+        if (!photonView.IsMine) return;
+
         CheckIsFalling();
 
         HandleDash();
@@ -60,17 +62,17 @@ public class JettController : MonoBehaviourPun
 
         HandleFloat();
         ApplyGravity();
-
-        Debug.Log("can use state: " + dashUI.CanUse);
     }
 
     void FixedUpdate()
     {
+        if (!photonView.IsMine) return;
+
         if (isDashing)
         {
             Vector3 input = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
             Vector3 moveDir = input == Vector3.zero ? transform.forward : transform.TransformDirection(input.normalized);
-            characterController.Move(moveDir * jettStats.dashSpeed * Time.fixedDeltaTime);
+            playerController.characterController.Move(moveDir * jettStats.dashSpeed * Time.fixedDeltaTime);
 
             if (Time.time - dashStartTime > jettStats.dashDurationSeconds)
             {
@@ -81,7 +83,7 @@ public class JettController : MonoBehaviourPun
 
     void CheckIsFalling()
     {
-        isGrounded = characterController.isGrounded;
+        isGrounded = playerController.characterController.isGrounded;
         float yVel = velocity.y;
 
         isFalling = !isGrounded && yVel <= 0 && yVel < lastYVelocity;
@@ -94,7 +96,7 @@ public class JettController : MonoBehaviourPun
         if (!isGrounded && !isDashing)
         {
             velocity.y += currentGravity * Time.deltaTime;
-            characterController.Move(velocity * Time.deltaTime);
+            playerController.characterController.Move(velocity * Time.deltaTime);
         }
         else if (isGrounded && velocity.y < 0)
         {
@@ -114,7 +116,7 @@ public class JettController : MonoBehaviourPun
     [PunRPC]
     void RPC_StartDash()
     {
-        if (!dashUI.CanUse) return;
+        if (!photonView.IsMine || !dashUI.CanUse) return;
 
         dashUI.TriggerUse();
         isDashing = true;
@@ -154,7 +156,7 @@ public class JettController : MonoBehaviourPun
     [PunRPC]
     void RPC_ThrowSmoke(Vector3 spawnPos, Quaternion camRot)
     {
-        if (!smokeUI.CanUse) return;
+        if (!photonView.IsMine || !smokeUI.CanUse) return;
 
         smokeUI.TriggerUse();
         GameObject smoke = PhotonNetwork.Instantiate("Jett/JettSmokeProjectile", spawnPos, camRot);
@@ -184,7 +186,6 @@ public class JettController : MonoBehaviourPun
     [PunRPC]
     void RPC_CreateSmokeBall(Vector3 position, Quaternion rotation)
     {
-        //Instantiate(smokeBallPrefab, position, rotation);
         PhotonNetwork.Instantiate("Jett/JettSmokeBall", position, rotation);
     }
     #endregion
@@ -201,14 +202,14 @@ public class JettController : MonoBehaviourPun
     [PunRPC]
     void RPC_Updraft()
     {
-        if (!updraftUI.CanUse) return;
+        if (!photonView.IsMine || !updraftUI.CanUse) return;
 
         updraftUI.TriggerUse();
         isUpdrafting = true;
         lastTimeUpdrafted = Time.time;
         updraftAttempts++;
 
-        float upVelocity = characterController.isGrounded ?
+        float upVelocity = playerController.characterController.isGrounded ?
             Mathf.Sqrt(jettStats.updraftHeight * -2f * currentGravity) :
             Mathf.Sqrt((jettStats.updraftHeight / 2.5f) * -2f * currentGravity);
 
@@ -222,6 +223,22 @@ public class JettController : MonoBehaviourPun
         currentGravity = (isFalling && Input.GetKey(KeyCode.Space)) ? JettStats.FloatingGravity : DefaultGravity;
     }
     #endregion
+
+    #region Helper
+    public void AssignSkillUI(SkillUIEntry dash, SkillUIEntry smoke, SkillUIEntry up, SkillUIEntry ult)
+    {
+        dashUI = dash;
+        smokeUI = smoke;
+        updraftUI = up;
+        ultimateUI = ult;
+
+        dashUI.Initialize();
+        smokeUI.Initialize();
+        updraftUI.Initialize();
+        ultimateUI.Initialize();
+    }
+    #endregion
 }
+
 
 
