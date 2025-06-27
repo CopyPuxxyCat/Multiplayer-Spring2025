@@ -14,10 +14,10 @@ public class JettStats : MonoBehaviour
 
     // Smokes
     [System.NonSerialized] public int maxSmokeAttempts = 3;
-    [System.NonSerialized] public float smokeDelaySeconds = 0.3f;
+    [System.NonSerialized] public float smokeDelaySeconds = 5f;
 
     // Updraft
     [System.NonSerialized] public int maxUpdraftAttempts = 3;
     [System.NonSerialized] public float updraftHeight = 4.0f;
-    [System.NonSerialized] public float updraftDelaySeconds = 0.2f;
+    [System.NonSerialized] public float updraftDelaySeconds = 5f;
 }

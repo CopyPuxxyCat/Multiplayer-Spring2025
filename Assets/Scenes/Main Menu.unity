@@ -912,7 +912,6 @@ MonoBehaviour:
   RoomTestButton: {fileID: 1026219899}
   AllMaps:
   - Map1
-  - Map2
   ChangeMapBetweenRounds: 1
 --- !u!1 &243179944
 GameObject:

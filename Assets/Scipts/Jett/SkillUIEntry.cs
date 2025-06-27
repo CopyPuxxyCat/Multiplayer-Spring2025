@@ -41,6 +41,7 @@ public class SkillUIEntry : MonoBehaviour
 
     void Update()
     {
+        Debug.Log("check canuse: " + CanUse + "check isOncooldown" + isOnCooldown);
         if (!isOnCooldown) return;
 
         cooldownTimer -= Time.deltaTime;

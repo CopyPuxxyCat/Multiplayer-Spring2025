@@ -11,6 +11,8 @@ using Photon.Pun;
 
 public class UIController : MonoBehaviour
 {
+
+
     #region Instance
     
     public static UIController instance;
@@ -35,6 +37,10 @@ public class UIController : MonoBehaviour
     public LeaderBoardPlayer leaderBoardPlayerDisplay;
     public GameObject EndScreen;
     public GameObject OptionsScreen;
+    public SkillUIEntry dashUI;
+    public SkillUIEntry smokeUI;
+    public SkillUIEntry updraftUI;
+    public SkillUIEntry ultimateUI;
 
     #endregion
 

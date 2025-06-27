@@ -13,6 +13,11 @@ public class JettController : MonoBehaviourPun
     [SerializeField] GameObject smokeBallPrefab;
     [SerializeField] Transform smokeFiringTransform;
 
+    private SkillUIEntry dashUI;
+    private SkillUIEntry smokeUI;
+    private SkillUIEntry updraftUI;
+    private SkillUIEntry ultimateUI;
+
     private int dashAttempts = 0;
     private float dashStartTime = 0f;
 
@@ -38,6 +43,11 @@ public class JettController : MonoBehaviourPun
         characterController = GetComponent<CharacterController>();
         jettStats = GetComponent<JettStats>();
         playerCamera = Camera.main;
+
+        dashUI = UIController.instance.dashUI;
+        smokeUI = UIController.instance.smokeUI;
+        updraftUI = UIController.instance.updraftUI;
+        ultimateUI = UIController.instance.ultimateUI;
     }
 
     void Update()
@@ -50,6 +60,8 @@ public class JettController : MonoBehaviourPun
 
         HandleFloat();
         ApplyGravity();
+
+        Debug.Log("can use state: " + dashUI.CanUse);
     }
 
     void FixedUpdate()
@@ -102,6 +114,9 @@ public class JettController : MonoBehaviourPun
     [PunRPC]
     void RPC_StartDash()
     {
+        if (!dashUI.CanUse) return;
+
+        dashUI.TriggerUse();
         isDashing = true;
         dashStartTime = Time.time;
         dashAttempts++;
@@ -139,6 +154,9 @@ public class JettController : MonoBehaviourPun
     [PunRPC]
     void RPC_ThrowSmoke(Vector3 spawnPos, Quaternion camRot)
     {
+        if (!smokeUI.CanUse) return;
+
+        smokeUI.TriggerUse();
         GameObject smoke = PhotonNetwork.Instantiate("Jett/JettSmokeProjectile", spawnPos, camRot);
         currentSmokeProjectile = smoke.GetComponent<JettSmokeProjectile>();
         currentSmokeProjectile.Initialize(false, playerCamera);
@@ -183,6 +201,9 @@ public class JettController : MonoBehaviourPun
     [PunRPC]
     void RPC_Updraft()
     {
+        if (!updraftUI.CanUse) return;
+
+        updraftUI.TriggerUse();
         isUpdrafting = true;
         lastTimeUpdrafted = Time.time;
         updraftAttempts++;
