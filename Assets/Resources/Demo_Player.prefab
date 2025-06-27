@@ -403,7 +403,6 @@ Transform:
   - {fileID: 3996294801731870625}
   - {fileID: 556388551}
   - {fileID: 543553862}
-  - {fileID: 4672491745262316751}
   m_Father: {fileID: 3996294800941443791}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3996294800941443827
@@ -421,10 +420,8 @@ GameObject:
   - component: {fileID: 3996294800941443785}
   - component: {fileID: 8489668293500570589}
   - component: {fileID: 8290159588175547941}
-  - component: {fileID: 7092454073215978187}
-  - component: {fileID: -4872338300072026183}
   m_Layer: 0
-  m_Name: Player
+  m_Name: Demo_Player
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -621,33 +618,6 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
---- !u!114 &7092454073215978187
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3996294800941443827}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b53551b4247f900438a18ca7d5c2a181, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &-4872338300072026183
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3996294800941443827}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a1c67406139f59a40b51cfcb38e28ea8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerCamera: {fileID: 0}
-  smokeBallPrefab: {fileID: 384059603863779693, guid: 2eeb97933b8a2b54791d49622a474455, type: 3}
-  smokeFiringTransform: {fileID: 4672491745262316751}
 --- !u!1 &3996294800966278944
 GameObject:
   m_ObjectHideFlags: 0
@@ -1094,37 +1064,6 @@ Transform:
   - {fileID: 3996294801331046218}
   - {fileID: 3996294801409250730}
   - {fileID: 3996294800193357120}
-  m_Father: {fileID: 3996294800895624450}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &7836557337828119683
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4672491745262316751}
-  m_Layer: 0
-  m_Name: SmokePoint
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4672491745262316751
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7836557337828119683}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.219, y: -0.543, z: 0.777}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
   m_Father: {fileID: 3996294800895624450}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &9126295954083937158
