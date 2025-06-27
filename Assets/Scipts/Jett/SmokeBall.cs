@@ -25,7 +25,6 @@ public class SmokeBall : MonoBehaviourPun
     {
         if (photonView.IsMine)
         {
-            Debug.Log("this is mine");
             PhotonNetwork.Destroy(gameObject);
         }
     }
