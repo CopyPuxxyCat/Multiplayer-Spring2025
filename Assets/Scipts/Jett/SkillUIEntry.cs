@@ -17,6 +17,11 @@ public class SkillUIEntry : MonoBehaviour
     private float cooldownTimer;
     private bool isOnCooldown = false;
 
+    private void Start()
+    {
+        Initialize();
+    }
+
     public void Initialize()
     {
         currentCharges = maxCharges;
@@ -41,7 +46,7 @@ public class SkillUIEntry : MonoBehaviour
 
     void Update()
     {
-        Debug.Log("check canuse: " + CanUse + "check isOncooldown" + isOnCooldown);
+        Debug.Log("check currentchanrges: " + currentCharges + "check isOncooldown" + isOnCooldown);
         if (!isOnCooldown) return;
 
         cooldownTimer -= Time.deltaTime;
@@ -54,11 +59,6 @@ public class SkillUIEntry : MonoBehaviour
         if (cooldownTimer <= 0f)
         {
             isOnCooldown = false;
-
-            if (currentCharges < maxCharges)
-            {
-                currentCharges++;
-            }
 
             fillImage.fillAmount = currentCharges > 0 ? 1f : 0f;
             iconImage.color = currentCharges > 0 ? Color.white : Color.black;
