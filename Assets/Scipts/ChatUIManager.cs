@@ -94,7 +94,7 @@ public class ChatUIManager : MonoBehaviour
 
     IEnumerator AutoCloseChatAfterDelay()
     {
-        yield return new WaitForSeconds(30f);
+        yield return new WaitForSeconds(10f);
         CloseChatPanel();
     }
 

@@ -44,6 +44,12 @@ MonoBehaviour:
   - RPC_LockSkin
   - RPC_SelectSkin
   - RPC_UpdateSkin
+  - RPC_CreateSmokeBall
+  - RPC_StartDash
+  - RPC_ThrowSmoke
+  - RPC_Updraft
+  - RPC_ActivateUltimate
+  - SetUltimateActive
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
