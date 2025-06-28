@@ -37,7 +37,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     // gun switching
     public Gun[] AllGuns;
-    private int SelectedGun;
+    public int SelectedGun;
     public bool canShoot = true;
 
     public GameObject PlayerHitImpact;
@@ -177,6 +177,14 @@ public class PlayerController : MonoBehaviourPunCallbacks
             }
             if (!OverHeated)
             {
+                // blockshooting if player is using skill
+                var blockers = GetComponents<ISkillBlocker>();
+                foreach (var blocker in blockers)
+                {
+                    Debug.Log("ShouldBlockShooting = " + blocker.ShouldBlockShooting);
+                    if (blocker.ShouldBlockShooting)
+                        return;
+                }
                 if (Input.GetMouseButtonDown(0))
                 {
                     Shoot();

@@ -204,8 +204,8 @@ MonoBehaviour:
   iconImage: {fileID: 778777016161660090}
   fillImage: {fileID: 6375829716007249017}
   countText: {fileID: 4762370671054805035}
-  maxCharges: 3
-  cooldownDuration: 5
+  maxCharges: 10
+  cooldownDuration: 0.1
 --- !u!1 &7503799192520837841
 GameObject:
   m_ObjectHideFlags: 0

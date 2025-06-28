@@ -5,8 +5,8 @@ using TMPro;
 public class SkillUIEntry : MonoBehaviour
 {
     [Header("UI")]
-    [SerializeField] private Image iconImage;       // Icon vuông
-    [SerializeField] private Image fillImage;       // Hình tròn phủ đếm ngược
+    [SerializeField] private Image iconImage;       
+    [SerializeField] private Image fillImage;       
     [SerializeField] private TextMeshProUGUI countText;
 
     [Header("Skill Settings")]
@@ -17,6 +17,7 @@ public class SkillUIEntry : MonoBehaviour
     private float cooldownTimer;
     private bool isOnCooldown = false;
 
+    public int RemainingCharges => currentCharges;
     public void Initialize()
     {
         currentCharges = maxCharges;

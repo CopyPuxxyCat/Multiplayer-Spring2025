@@ -1,16 +1,26 @@
 using UnityEngine;
 using Photon.Pun;
+using System.Collections.Generic;
 
-public class JettController : MonoBehaviourPun
+public class JettController : MonoBehaviourPun, ISkillBlocker
 {
     public bool isDashing { get; private set; } = false;
     public bool isThrowingSmoke { get; private set; } = false;
     public bool isUpdrafting { get; private set; } = false;
     public bool isFalling { get; private set; } = false;
+    public bool ShouldBlockShooting => isUsingUltimate;
 
     [SerializeField] Camera playerCamera;
     [SerializeField] GameObject smokeBallPrefab;
     [SerializeField] Transform smokeFiringTransform;
+
+    [Header("Ultimate")]
+    [SerializeField] private GameObject knifeObject_Local;
+    [SerializeField] private GameObject knifeObject_Remote;
+    [SerializeField] private Transform daggerSpawnPoint;
+    [SerializeField] private GameObject daggerPrefab;
+
+    private bool isUsingUltimate = false;
 
     [Header("Skill UI")]
     private SkillUIEntry dashUI;
@@ -48,6 +58,11 @@ public class JettController : MonoBehaviourPun
 
         var ui = UIController.instance;
         AssignSkillUI(ui.dashUI, ui.smokeUI, ui.updraftUI, ui.ultimateUI);
+
+        if (knifeObject_Local != null)
+            knifeObject_Local.SetActive(false);
+        if (knifeObject_Remote != null)
+            knifeObject_Remote.SetActive(false);
     }
 
     void Update()
@@ -56,9 +71,24 @@ public class JettController : MonoBehaviourPun
 
         CheckIsFalling();
 
-        HandleDash();
-        HandleSmoke();
-        HandleUpdraft();
+        if (Input.GetKeyDown(KeyCode.R) && !isUsingUltimate && ultimateUI.CanUse)
+        {
+            photonView.RPC(nameof(SetUltimateActive), RpcTarget.All, true);
+        }
+
+        if (isUsingUltimate)
+        {
+            if (Input.GetMouseButtonDown(0) && ultimateUI.CanUse)
+            {
+                FireDagger();
+            }
+        }
+        else
+        {
+            HandleDash();
+            HandleSmoke();
+            HandleUpdraft();
+        }
 
         HandleFloat();
         ApplyGravity();
@@ -85,9 +115,7 @@ public class JettController : MonoBehaviourPun
     {
         isGrounded = playerController.characterController.isGrounded;
         float yVel = velocity.y;
-
         isFalling = !isGrounded && yVel <= 0 && yVel < lastYVelocity;
-
         lastYVelocity = yVel;
     }
 
@@ -217,6 +245,49 @@ public class JettController : MonoBehaviourPun
     }
     #endregion
 
+    #region Ultimate
+    [PunRPC]
+    public void SetUltimateActive(bool isActive)
+    {
+        if (playerController == null) playerController = GetComponent<PlayerController>();
+
+        isUsingUltimate = isActive;
+
+        if (photonView.IsMine)
+        {
+            foreach (Gun gun in playerController.AllGuns)
+                gun.gameObject.SetActive(!isActive);
+            if (knifeObject_Local != null)
+                knifeObject_Local.SetActive(isActive);
+        }
+        else
+        {
+            if (knifeObject_Remote != null)
+                knifeObject_Remote.SetActive(isActive);
+        }
+    }
+
+    private void FireDagger()
+    {
+        if (!ultimateUI.CanUse) return;
+
+        ultimateUI.TriggerUse();
+
+        GameObject dagger = PhotonNetwork.Instantiate("Dagger", daggerSpawnPoint.position, daggerSpawnPoint.rotation);
+
+        Rigidbody rb = dagger.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.velocity = daggerSpawnPoint.forward * 30f;
+        }
+
+        if (!ultimateUI.CanUse && ultimateUI.RemainingCharges == 0)
+        {
+            photonView.RPC(nameof(SetUltimateActive), RpcTarget.All, false);
+        }
+    }
+    #endregion
+
     #region Float
     void HandleFloat()
     {
@@ -239,6 +310,10 @@ public class JettController : MonoBehaviourPun
     }
     #endregion
 }
+
+
+
+
 
 
 
