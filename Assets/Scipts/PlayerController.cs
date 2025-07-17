@@ -72,11 +72,9 @@ public class PlayerController : MonoBehaviourPunCallbacks
         if (AllGuns.Length == expectedGunCount)
         {
             photonView.RPC("SetGun", RpcTarget.All, SelectedGun);
+            WeaponUpgradeManager.instance.InitUpgradeData(AllGuns);
         }
-        else
-        {
-            Debug.Log("loi o dong 76");
-        } 
+
         // removed spawn here as we want to handle this through player spawner
         /// if in first person view, disable player model locally not on network
         /// it will be visible on network to other players

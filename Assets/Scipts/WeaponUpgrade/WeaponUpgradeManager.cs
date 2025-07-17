@@ -1,21 +1,21 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class WeaponUpgradeManager : MonoBehaviour
 {
     public static WeaponUpgradeManager instance;
+
     [Header("Config")]
     public int[] upgradeCosts = { 400, 600, 800, 1000, 1200, 1500 };
     public int maxUpgradeLevel = 6;
     public int armorCost = 500;
 
     [Header("References")]
+    public CurrencyManager currencyManager;
     public Gun currentGun;
-    public CurrencyManager currencyManager; 
 
-    // Các cấp hiện tại
-    private int damageLevel = 0;
-    private int fireRateLevel = 0;
-    private int heatLevel = 0;
+    private Dictionary<int, Gun> indexToGun = new Dictionary<int, Gun>();
+    private Dictionary<Gun, GunUpgradeData> gunUpgradeLevels = new Dictionary<Gun, GunUpgradeData>();
 
     private bool armorPurchased = false;
 
@@ -24,6 +24,7 @@ public class WeaponUpgradeManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
+            DontDestroyOnLoad(gameObject); // Optional
         }
         else
         {
@@ -31,37 +32,72 @@ public class WeaponUpgradeManager : MonoBehaviour
         }
     }
 
-    public bool UpgradeDamage()
+    public void InitUpgradeData(Gun[] guns)
     {
-        if (damageLevel >= maxUpgradeLevel) return false;
-        int cost = upgradeCosts[damageLevel];
-        if (!currencyManager.TrySpend(cost)) return false;
+        indexToGun.Clear();
+        gunUpgradeLevels.Clear();
 
-        damageLevel++;
-        ApplyUpgradesToGun();
-        return true;
+        for (int i = 0; i < guns.Length; i++)
+        {
+            indexToGun[i] = guns[i];
+            gunUpgradeLevels[guns[i]] = new GunUpgradeData();
+        }
     }
 
-    public bool UpgradeFireRate()
+    public void SetCurrentGun(Gun gun)
     {
-        if (fireRateLevel >= maxUpgradeLevel) return false;
-        int cost = upgradeCosts[fireRateLevel];
-        if (!currencyManager.TrySpend(cost)) return false;
+        currentGun = gun;
 
-        fireRateLevel++;
+        if (!gunUpgradeLevels.ContainsKey(gun))
+        {
+            gunUpgradeLevels[gun] = new GunUpgradeData();
+        }
+
         ApplyUpgradesToGun();
-        return true;
     }
 
-    public bool UpgradeHeatReduction()
+    public void UpgradeGunStat(int gunIndex, UpgradeButton.UpgradeType type)
     {
-        if (heatLevel >= maxUpgradeLevel) return false;
-        int cost = upgradeCosts[heatLevel];
-        if (!currencyManager.TrySpend(cost)) return false;
+        if (!indexToGun.ContainsKey(gunIndex)) return;
 
-        heatLevel++;
-        ApplyUpgradesToGun();
-        return true;
+        Gun targetGun = indexToGun[gunIndex];
+        if (!gunUpgradeLevels.ContainsKey(targetGun)) return;
+
+        GunUpgradeData data = gunUpgradeLevels[targetGun];
+        int level = 0;
+        int cost = 0;
+
+        switch (type)
+        {
+            case UpgradeButton.UpgradeType.Damage:
+                level = data.damageLevel;
+                if (level >= maxUpgradeLevel) return;
+                cost = upgradeCosts[level];
+                if (!currencyManager.TrySpend(cost)) return;
+                data.damageLevel++;
+                break;
+
+            case UpgradeButton.UpgradeType.FireRate:
+                level = data.fireRateLevel;
+                if (level >= maxUpgradeLevel) return;
+                cost = upgradeCosts[level];
+                if (!currencyManager.TrySpend(cost)) return;
+                data.fireRateLevel++;
+                break;
+
+            case UpgradeButton.UpgradeType.Heat:
+                level = data.heatLevel;
+                if (level >= maxUpgradeLevel) return;
+                cost = upgradeCosts[level];
+                if (!currencyManager.TrySpend(cost)) return;
+                data.heatLevel++;
+                break;
+        }
+
+        if (targetGun == currentGun)
+        {
+            ApplyUpgradesToGun();
+        }
     }
 
     public bool PurchaseArmor()
@@ -70,30 +106,17 @@ public class WeaponUpgradeManager : MonoBehaviour
         if (!currencyManager.TrySpend(armorCost)) return false;
 
         armorPurchased = true;
-        // TODO: Gọi hàm nào đó để thêm giáp cho player
+        // TODO: Cấp giáp cho player
         return true;
-    }
-
-    public void SetCurrentGun(Gun gun)
-    {
-        currentGun = gun;
-        ApplyUpgradesToGun(); // Gán lại súng sẽ re-apply nâng cấp
-    }
-
-    private void ApplyUpgradesToGun()
-    {
-        Debug.Log("level của súng: " + damageLevel + "-" + fireRateLevel + "-" + heatLevel);
-        if (currentGun != null)
-        {
-            currentGun.ApplyUpgrades(damageLevel, fireRateLevel, heatLevel);
-        }
     }
 
     public void ResetUpgrades()
     {
-        damageLevel = 0;
-        fireRateLevel = 0;
-        heatLevel = 0;
+        foreach (var upgrade in gunUpgradeLevels.Values)
+        {
+            upgrade.Reset();
+        }
+
         armorPurchased = false;
 
         if (currentGun != null)
@@ -101,5 +124,29 @@ public class WeaponUpgradeManager : MonoBehaviour
             currentGun.ResetToBaseStats();
         }
     }
+
+    private void ApplyUpgradesToGun()
+    {
+        if (currentGun == null || !gunUpgradeLevels.ContainsKey(currentGun)) return;
+
+        GunUpgradeData upgrades = gunUpgradeLevels[currentGun];
+        currentGun.ApplyUpgrades(upgrades.damageLevel, upgrades.fireRateLevel, upgrades.heatLevel);
+    }
+
+    [System.Serializable]
+    public class GunUpgradeData
+    {
+        public int damageLevel = 0;
+        public int fireRateLevel = 0;
+        public int heatLevel = 0;
+
+        public void Reset()
+        {
+            damageLevel = 0;
+            fireRateLevel = 0;
+            heatLevel = 0;
+        }
+    }
 }
+
 
