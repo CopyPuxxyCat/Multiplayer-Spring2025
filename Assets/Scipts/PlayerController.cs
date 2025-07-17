@@ -44,6 +44,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     public int MaxHealth = 200;
     private int CurrentHealth;
+    private int currentShield;
     public Animator PlayerAnimator;
     public GameObject PlayerModel;
     public Transform ModelGunPoint, GunHolder;
@@ -65,6 +66,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         UIController.instance.WeaponTemperatureSlider.maxValue = MaxHeat;
         //SwitchGun();
         CurrentHealth = MaxHealth;
+        currentShield = 25;
         photonView.RPC("SetGun", RpcTarget.All, SelectedGun);
         // removed spawn here as we want to handle this through player spawner
         /// if in first person view, disable player model locally not on network
@@ -74,6 +76,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
             PlayerModel.SetActive(false);
             UIController.instance.HealthSlider.maxValue = MaxHealth;
             UIController.instance.HealthSlider.value = CurrentHealth;
+            UIController.instance.ShieldSlider.maxValue = 200;
+            UIController.instance.ShieldSlider.value = currentShield;
         }
         else
         {
@@ -181,7 +185,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
                 var blockers = GetComponents<ISkillBlocker>();
                 foreach (var blocker in blockers)
                 {
-                    Debug.Log("ShouldBlockShooting = " + blocker.ShouldBlockShooting);
                     if (blocker.ShouldBlockShooting)
                         return;
                 }
@@ -293,7 +296,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_UpdateSkin(int skinID)
     {
-        Debug.Log("chon skin: " + skinID);
         if (skinID >= 0 && skinID < AllSkins.Length)
         {
             PlayerModel.GetComponent<Renderer>().material = AllSkins[skinID];
@@ -364,9 +366,20 @@ public class PlayerController : MonoBehaviourPunCallbacks
     /// <param name="damager"></param>
     public void TakeDamage(string killer, int damageAmount, int actor)
     {
-        if(photonView.IsMine)
+        if (photonView.IsMine)
         {
             //Debug.Log(photonView.Owner.NickName + " been hit by " + killer);
+            if(currentShield > 0 && currentShield >= damageAmount)
+            {
+                    currentShield -= damageAmount;
+                UIController.instance.ShieldSlider.value = currentShield;
+            }  
+            else if(currentShield > 0 && currentShield < damageAmount)
+            {
+                currentShield = 0;
+                CurrentHealth -= (damageAmount - currentShield);
+                UIController.instance.ShieldSlider.value = currentShield;
+            }    
             CurrentHealth -= damageAmount;
             if(CurrentHealth <= 0 )
             {

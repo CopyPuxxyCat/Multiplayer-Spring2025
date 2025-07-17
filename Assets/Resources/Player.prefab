@@ -651,8 +651,8 @@ MonoBehaviour:
   playerCamera: {fileID: 0}
   smokeBallPrefab: {fileID: 384059603863779693, guid: 2eeb97933b8a2b54791d49622a474455, type: 3}
   smokeFiringTransform: {fileID: 4672491745262316751}
-  knifeObject_Local: {fileID: 0}
-  knifeObject_Remote: {fileID: 0}
+  knifeObject_Local: {fileID: 1117211216737646479, guid: ed64243e76fe48349939b90472795a18, type: 3}
+  knifeObject_Remote: {fileID: 1117211216737646479, guid: ed64243e76fe48349939b90472795a18, type: 3}
   daggerSpawnPoint: {fileID: 7301926722250086930}
   daggerPrefab: {fileID: 1117211216737646479, guid: ed64243e76fe48349939b90472795a18, type: 3}
 --- !u!1 &3996294800966278944
@@ -703,7 +703,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &3996294801331046218
 Transform:
   m_ObjectHideFlags: 0

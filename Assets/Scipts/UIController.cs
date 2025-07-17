@@ -31,6 +31,7 @@ public class UIController : MonoBehaviour
     public GameObject DeathScreen;
     public TMP_Text DeathText;
     public Slider HealthSlider;
+    public Slider ShieldSlider;
     public TMP_Text KillsText;
     public TMP_Text DeathsLabel;
     public GameObject LeaderBoard;

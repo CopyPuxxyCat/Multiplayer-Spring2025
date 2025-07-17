@@ -1010,6 +1010,10 @@ MonoBehaviour:
   leaderBoardPlayerDisplay: {fileID: 0}
   EndScreen: {fileID: 0}
   OptionsScreen: {fileID: 0}
+  dashUI: {fileID: 0}
+  smokeUI: {fileID: 0}
+  updraftUI: {fileID: 0}
+  ultimateUI: {fileID: 0}
 --- !u!1 &548246841
 GameObject:
   m_ObjectHideFlags: 0
@@ -1855,6 +1859,7 @@ MonoBehaviour:
   ViewPoint: {fileID: 838708270}
   MouseSensitivity: 1
   InvertLook: 0
+  SkinPickScreen: {fileID: 0}
   MoveSpeed: 5
   RunSpeed: 8
   characterController: {fileID: 859341797}
@@ -1873,6 +1878,8 @@ MonoBehaviour:
   - {fileID: 1542565479}
   - {fileID: 1600093319}
   - {fileID: 128347245}
+  SelectedGun: 0
+  canShoot: 1
   PlayerHitImpact: {fileID: 0}
   MaxHealth: 200
   PlayerAnimator: {fileID: 0}
@@ -3249,6 +3256,71 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 3b7c14d870fdc314f8060a632c4fa82b, type: 3}
   m_PrefabInstance: {fileID: 1968008632}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &2022122913
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -4254856898588691974, guid: e1488ff9bcc51b04699d9d58ef637042, type: 3}
+      propertyPath: sceneViewId
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -4254856898588691974, guid: e1488ff9bcc51b04699d9d58ef637042, type: 3}
+      propertyPath: ObservedComponents.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3959731218616626463, guid: e1488ff9bcc51b04699d9d58ef637042, type: 3}
+      propertyPath: m_Name
+      value: WindSmokeBomb
+      objectReference: {fileID: 0}
+    - target: {fileID: 8738294982395161491, guid: e1488ff9bcc51b04699d9d58ef637042, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -8.15799
+      objectReference: {fileID: 0}
+    - target: {fileID: 8738294982395161491, guid: e1488ff9bcc51b04699d9d58ef637042, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.524
+      objectReference: {fileID: 0}
+    - target: {fileID: 8738294982395161491, guid: e1488ff9bcc51b04699d9d58ef637042, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.6662016
+      objectReference: {fileID: 0}
+    - target: {fileID: 8738294982395161491, guid: e1488ff9bcc51b04699d9d58ef637042, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8738294982395161491, guid: e1488ff9bcc51b04699d9d58ef637042, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8738294982395161491, guid: e1488ff9bcc51b04699d9d58ef637042, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8738294982395161491, guid: e1488ff9bcc51b04699d9d58ef637042, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8738294982395161491, guid: e1488ff9bcc51b04699d9d58ef637042, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8738294982395161491, guid: e1488ff9bcc51b04699d9d58ef637042, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8738294982395161491, guid: e1488ff9bcc51b04699d9d58ef637042, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: e1488ff9bcc51b04699d9d58ef637042, type: 3}
 --- !u!1001 &2068953249
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3335,3 +3407,4 @@ SceneRoots:
   - {fileID: 536333418}
   - {fileID: 1157884708}
   - {fileID: 1020480426}
+  - {fileID: 2022122913}

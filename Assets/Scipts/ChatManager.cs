@@ -42,7 +42,6 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     public void OnConnected()
     {
-        Debug.Log("Connected to Photon Chat!");
         currentChannel = PhotonNetwork.CurrentRoom.Name;
         chatClient.Subscribe(new string[] { currentChannel });
     }
