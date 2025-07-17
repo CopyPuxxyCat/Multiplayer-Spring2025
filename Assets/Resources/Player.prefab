@@ -269,12 +269,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsAutomatic: 1
+  MuzzleFlash: {fileID: 4302302289756200447}
+  ShotSound: {fileID: 844226435860142146}
   TimeBetweenShots: 0.35
   HeatPerShot: 5
-  MuzzleFlash: {fileID: 4302302289756200447}
   ShotDamage: 50
   ADSZoom: 30
-  ShotSound: {fileID: 844226435860142146}
 --- !u!82 &844226435860142146
 AudioSource:
   m_ObjectHideFlags: 0
@@ -559,6 +559,7 @@ MonoBehaviour:
   ADSInPoint: {fileID: 543553862}
   FootStepSlow: {fileID: 3996388690385327860}
   FootStepFast: {fileID: 5069774941150142454}
+  expectedGunCount: 3
 --- !u!143 &3996294800941443785
 CharacterController:
   m_ObjectHideFlags: 0
@@ -734,12 +735,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsAutomatic: 0
+  MuzzleFlash: {fileID: 4302302288791137500}
+  ShotSound: {fileID: 4337745680701367374}
   TimeBetweenShots: 0.1
   HeatPerShot: 2
-  MuzzleFlash: {fileID: 4302302288791137500}
   ShotDamage: 25
   ADSZoom: 50
-  ShotSound: {fileID: 4337745680701367374}
 --- !u!82 &4337745680701367374
 AudioSource:
   m_ObjectHideFlags: 0
@@ -884,12 +885,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsAutomatic: 1
+  MuzzleFlash: {fileID: 4302302288588816260}
+  ShotSound: {fileID: 8080784964059385376}
   TimeBetweenShots: 0.1
   HeatPerShot: 1
-  MuzzleFlash: {fileID: 4302302288588816260}
   ShotDamage: 15
   ADSZoom: 45
-  ShotSound: {fileID: 8080784964059385376}
 --- !u!82 &8080784964059385376
 AudioSource:
   m_ObjectHideFlags: 0

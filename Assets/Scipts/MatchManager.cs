@@ -330,6 +330,7 @@ public class MatchManager : MonoBehaviourPunCallbacks, IOnEventCallback
         SceneManager.LoadScene(0);
     }
 
+
     /// <summary>
     /// check for winner, Whenever stats are updated
     /// </summary>
@@ -445,6 +446,8 @@ public class MatchManager : MonoBehaviourPunCallbacks, IOnEventCallback
         }
 
         UpdateStatsToDisplay();
+
+        CurrencyManager.Instance.GrantMoneyWhenStartMatch();
         PlayerSpawner.instance.SpawnPlayer();
     }
 

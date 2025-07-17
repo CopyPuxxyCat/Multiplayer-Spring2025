@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using Photon.Pun;
+using System.Linq;
 
 public class PlayerController : MonoBehaviourPunCallbacks
 {
@@ -52,6 +53,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     public float ADSSpeed = 5;
     public Transform ADSOutPoint, ADSInPoint;
     public AudioSource FootStepSlow, FootStepFast;
+    public int expectedGunCount = 3;
 
     //skin manager
 
@@ -67,7 +69,14 @@ public class PlayerController : MonoBehaviourPunCallbacks
         //SwitchGun();
         CurrentHealth = MaxHealth;
         currentShield = 25;
-        photonView.RPC("SetGun", RpcTarget.All, SelectedGun);
+        if (AllGuns.Length == expectedGunCount)
+        {
+            photonView.RPC("SetGun", RpcTarget.All, SelectedGun);
+        }
+        else
+        {
+            Debug.Log("loi o dong 76");
+        } 
         // removed spawn here as we want to handle this through player spawner
         /// if in first person view, disable player model locally not on network
         /// it will be visible on network to other players
@@ -419,6 +428,11 @@ public class PlayerController : MonoBehaviourPunCallbacks
             gun.gameObject.SetActive(false);
         }
         AllGuns[SelectedGun].gameObject.SetActive(true);
+        if (WeaponUpgradeManager.instance != null)
+        {
+            WeaponUpgradeManager.instance.SetCurrentGun(AllGuns[SelectedGun]);
+        }
+
         AllGuns[SelectedGun].MuzzleFlash.SetActive(false);
     }
 
@@ -432,6 +446,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         if(GunToSwitchTo < AllGuns.Length)
         {
             SelectedGun = GunToSwitchTo;
+            
             SwitchGun();
         }
     }

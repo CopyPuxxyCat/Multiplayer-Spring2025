@@ -42,10 +42,17 @@ public class UIController : MonoBehaviour
     public SkillUIEntry smokeUI;
     public SkillUIEntry updraftUI;
     public SkillUIEntry ultimateUI;
+    public TMP_Text ingameMoney;
 
     #endregion
 
     #region Methods and Overrides
+
+    private void Start()
+    {
+        CurrencyManager.Instance.OnMoneyChanged += UpdateMoneyUI;
+        //CurrencyManager.Instance.RefreshMoney();
+    }
 
     private void Update()
     {
@@ -90,6 +97,11 @@ public class UIController : MonoBehaviour
     public void QuitGame()
     {
         Application.Quit();
+    }
+
+    public void UpdateMoneyUI(int amount)
+    {
+        ingameMoney.text = "$" + amount.ToString();
     }
     #endregion
 }
