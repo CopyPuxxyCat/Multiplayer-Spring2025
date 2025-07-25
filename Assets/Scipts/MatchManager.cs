@@ -446,8 +446,6 @@ public class MatchManager : MonoBehaviourPunCallbacks, IOnEventCallback
         }
 
         UpdateStatsToDisplay();
-
-        CurrencyManager.Instance.GrantMoneyWhenStartMatch();
         PlayerSpawner.instance.SpawnPlayer();
     }
 

@@ -1,152 +1,218 @@
-using System.Collections.Generic;
+// =========================
+// 7️⃣ WeaponUpgradeManager.cs (linked to GameObject in scene)
+// =========================
 using UnityEngine;
+using System.Collections.Generic;
+using System.Collections;
+using Photon.Pun;
 
 public class WeaponUpgradeManager : MonoBehaviour
 {
-    public static WeaponUpgradeManager instance;
+    public static WeaponUpgradeManager Instance;
 
-    [Header("Config")]
-    public int[] upgradeCosts = { 400, 600, 800, 1000, 1200, 1500 };
-    public int maxUpgradeLevel = 6;
-    public int armorCost = 500;
+    public int[] upgradeCosts = { 400, 600, 800, 1000 };
+    public int smallArmorCost = 500;
+    public int bigArmorCost = 1000;
 
-    [Header("References")]
-    public CurrencyManager currencyManager;
-    public Gun currentGun;
+    public UIWeaponUpgrade UI;
+    private CurrencyManager currencyManager;
+    private PlayerController playerController;
 
-    private Dictionary<int, Gun> indexToGun = new Dictionary<int, Gun>();
-    private Dictionary<Gun, GunUpgradeData> gunUpgradeLevels = new Dictionary<Gun, GunUpgradeData>();
+    private Dictionary<int, Gun> indexToGun = new();
+    private Dictionary<Gun, UpgradeData> currentUpgrades = new();
+    private Dictionary<Gun, UpgradeData> tempUpgrades = new();
 
-    private bool armorPurchased = false;
+    private bool armorSmall, armorBig;
+    private int coinInStore;
 
-    private void Awake()
+    void Awake() => Instance = this;
+
+    private void Start()
     {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject); // Optional
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        // Tự động tìm player local khi bắt đầu
+        StartCoroutine(WaitForPlayerAndInit());
+        
     }
 
-    public void InitUpgradeData(Gun[] guns)
+    private IEnumerator WaitForPlayerAndInit()
+    {
+        yield return new WaitForSeconds(0.2f); // đợi cho chắc chắn player đã spawn
+
+        FindLocalPlayerRefs(); // Gán currencyManager và playerController nếu có
+    }
+
+    public bool HasValidRefs()
+    {
+        return currencyManager != null && playerController != null;
+    }
+
+    public void Init(Gun[] guns)
     {
         indexToGun.Clear();
-        gunUpgradeLevels.Clear();
+        currentUpgrades.Clear();
+        tempUpgrades.Clear();
 
         for (int i = 0; i < guns.Length; i++)
         {
             indexToGun[i] = guns[i];
-            gunUpgradeLevels[guns[i]] = new GunUpgradeData();
+            currentUpgrades[guns[i]] = new UpgradeData();
+            tempUpgrades[guns[i]] = new UpgradeData();
         }
     }
 
-    public void SetCurrentGun(Gun gun)
+    public void StartUpgradeSession()
     {
-        currentGun = gun;
 
-        if (!gunUpgradeLevels.ContainsKey(gun))
+        if (currencyManager == null || playerController == null || UI == null)
         {
-            gunUpgradeLevels[gun] = new GunUpgradeData();
+            Debug.LogWarning("[WeaponUpgradeManager] Missing references! Retrying...");
+            FindLocalPlayerRefs();
+            return;
         }
 
-        ApplyUpgradesToGun();
+        if (currencyManager == null || playerController == null)
+        {
+            Debug.LogWarning("[WeaponUpgradeManager] Missing references! Retrying...");
+            FindLocalPlayerRefs(); // Tìm lại nếu chưa có
+            return; // hoặc bạn có thể delay và gọi lại sau
+        }
+        coinInStore = currencyManager.CurrentCoin;
+        armorSmall = false;
+        armorBig = false;
+        foreach (var g in currentUpgrades)
+            tempUpgrades[g.Key] = g.Value.Clone();
+
+        UI.UpdateUI(coinInStore);
     }
 
-    public void UpgradeGunStat(int gunIndex, UpgradeButton.UpgradeType type)
+    public void UpgradeGunStat(int index, UpgradeButton.StatType stat)
     {
-        if (!indexToGun.ContainsKey(gunIndex)) return;
+        var gun = indexToGun[index];
+        var data = tempUpgrades[gun];
+        int lvl = data.GetLevel(stat);
+        int cost = upgradeCosts[Mathf.Min(lvl, upgradeCosts.Length - 1)];
 
-        Gun targetGun = indexToGun[gunIndex];
-        if (!gunUpgradeLevels.ContainsKey(targetGun)) return;
-
-        GunUpgradeData data = gunUpgradeLevels[targetGun];
-        int level = 0;
-        int cost = 0;
-
-        switch (type)
+        if (coinInStore >= cost)
         {
-            case UpgradeButton.UpgradeType.Damage:
-                level = data.damageLevel;
-                if (level >= maxUpgradeLevel) return;
-                cost = upgradeCosts[level];
-                if (!currencyManager.TrySpend(cost)) return;
-                data.damageLevel++;
+            data.Increase(stat);
+            coinInStore -= cost;
+            UI.UpdateUI(coinInStore);
+        }
+    }
+
+    public void DowngradeGunStat(int index, UpgradeButton.StatType stat)
+    {
+        var gun = indexToGun[index];
+        var data = tempUpgrades[gun];
+        int lvl = data.GetLevel(stat);
+        if (lvl > 0)
+        {
+            int refund = upgradeCosts[lvl - 1];
+            data.Decrease(stat);
+            coinInStore += refund;
+            UI.UpdateUI(coinInStore);
+        }
+    }
+
+    public void ToggleArmorPending(ArmorButton.ArmorType type)
+    {
+        bool toggle = type == ArmorButton.ArmorType.Small ? (armorSmall = !armorSmall) : (armorBig = !armorBig);
+        int cost = type == ArmorButton.ArmorType.Small ? smallArmorCost : bigArmorCost;
+
+        if (toggle) coinInStore -= cost;
+        else coinInStore += cost;
+
+        UI.UpdateUI(coinInStore);
+    }
+
+    public void SubmitPurchase()
+    {
+        foreach (var pair in tempUpgrades)
+        {
+            currentUpgrades[pair.Key] = pair.Value.Clone();
+            pair.Key.ApplyUpgrades(pair.Value.damage, pair.Value.fireRate, pair.Value.heat);
+        }
+
+        int totalArmor = 0;
+        if (armorSmall) totalArmor += 100;
+        if (armorBig) totalArmor += 200;
+        playerController.AddArmor(totalArmor);
+
+        currencyManager.SetCoin(coinInStore);
+        UI.UpdateUI(coinInStore);
+    }
+
+    public void DiscardAll() => StartUpgradeSession();
+
+    public void FindLocalPlayerRefs()
+    {
+        foreach (var player in GameObject.FindGameObjectsWithTag("Player"))
+        {
+            var view = player.GetComponent<PhotonView>();
+            if (view != null && view.IsMine)
+            {
+                currencyManager = player.GetComponent<CurrencyManager>();
+                playerController = player.GetComponent<PlayerController>();
+                Debug.Log($"[FindLocalPlayerRefs] Found player: {player.name}");
+                Debug.Log($"CurrencyManager: {(currencyManager == null ? "null" : "OK")}");
+                Debug.Log($"PlayerController: {(playerController == null ? "null" : "OK")}");
                 break;
-
-            case UpgradeButton.UpgradeType.FireRate:
-                level = data.fireRateLevel;
-                if (level >= maxUpgradeLevel) return;
-                cost = upgradeCosts[level];
-                if (!currencyManager.TrySpend(cost)) return;
-                data.fireRateLevel++;
-                break;
-
-            case UpgradeButton.UpgradeType.Heat:
-                level = data.heatLevel;
-                if (level >= maxUpgradeLevel) return;
-                cost = upgradeCosts[level];
-                if (!currencyManager.TrySpend(cost)) return;
-                data.heatLevel++;
-                break;
+            }
         }
 
-        if (targetGun == currentGun)
+        if (currencyManager != null)
         {
-            ApplyUpgradesToGun();
+            currencyManager.OnMoneyChanged += UpdateCoinDisplayInStore;
+            UpdateCoinDisplayInStore(currencyManager.CurrentCoin); // cập nhật lần đầu
         }
     }
 
-    public bool PurchaseArmor()
+    private void UpdateCoinDisplayInStore(int currentCoin)
     {
-        if (armorPurchased) return false;
-        if (!currencyManager.TrySpend(armorCost)) return false;
-
-        armorPurchased = true;
-        // TODO: Cấp giáp cho player
-        return true;
+        UI.UpdateUI(currentCoin);
     }
 
-    public void ResetUpgrades()
+    public int GetUpgradeLevel(int idx, UpgradeButton.StatType type) => tempUpgrades[indexToGun[idx]].GetLevel(type);
+    public int GetUpgradePrice(int idx, UpgradeButton.StatType type)
     {
-        foreach (var upgrade in gunUpgradeLevels.Values)
-        {
-            upgrade.Reset();
-        }
-
-        armorPurchased = false;
-
-        if (currentGun != null)
-        {
-            currentGun.ResetToBaseStats();
-        }
+        int lvl = GetUpgradeLevel(idx, type);
+        return upgradeCosts[Mathf.Min(lvl, upgradeCosts.Length - 1)];
     }
+    public bool CanAffordUpgrade(int idx, UpgradeButton.StatType type) => coinInStore >= GetUpgradePrice(idx, type);
 
-    private void ApplyUpgradesToGun()
+    private class UpgradeData
     {
-        if (currentGun == null || !gunUpgradeLevels.ContainsKey(currentGun)) return;
+        public int damage, fireRate, heat;
 
-        GunUpgradeData upgrades = gunUpgradeLevels[currentGun];
-        currentGun.ApplyUpgrades(upgrades.damageLevel, upgrades.fireRateLevel, upgrades.heatLevel);
-    }
+        public int GetLevel(UpgradeButton.StatType stat) =>
+            stat switch
+            {
+                UpgradeButton.StatType.Damage => damage,
+                UpgradeButton.StatType.FireRate => fireRate,
+                UpgradeButton.StatType.Heat => heat,
+                _ => 0
+            };
 
-    [System.Serializable]
-    public class GunUpgradeData
-    {
-        public int damageLevel = 0;
-        public int fireRateLevel = 0;
-        public int heatLevel = 0;
-
-        public void Reset()
+        public void Increase(UpgradeButton.StatType stat)
         {
-            damageLevel = 0;
-            fireRateLevel = 0;
-            heatLevel = 0;
+            switch (stat)
+            {
+                case UpgradeButton.StatType.Damage: damage++; break;
+                case UpgradeButton.StatType.FireRate: fireRate++; break;
+                case UpgradeButton.StatType.Heat: heat++; break;
+            }
         }
+
+        public void Decrease(UpgradeButton.StatType stat)
+        {
+            switch (stat)
+            {
+                case UpgradeButton.StatType.Damage: damage--; break;
+                case UpgradeButton.StatType.FireRate: fireRate--; break;
+                case UpgradeButton.StatType.Heat: heat--; break;
+            }
+        }
+
+        public UpgradeData Clone() => new UpgradeData { damage = damage, fireRate = fireRate, heat = heat };
     }
 }
-
-

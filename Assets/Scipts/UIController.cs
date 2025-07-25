@@ -43,6 +43,7 @@ public class UIController : MonoBehaviour
     public SkillUIEntry updraftUI;
     public SkillUIEntry ultimateUI;
     public TMP_Text ingameMoney;
+    public GameObject WeaponUpgradePanel;
 
     #endregion
 
@@ -50,8 +51,8 @@ public class UIController : MonoBehaviour
 
     private void Start()
     {
-        CurrencyManager.Instance.OnMoneyChanged += UpdateMoneyUI;
-        //CurrencyManager.Instance.RefreshMoney();
+        DisableAllPanelWhenStart();
+        UpdateMoneyUI(5000);
     }
 
     private void Update()
@@ -60,7 +61,18 @@ public class UIController : MonoBehaviour
         {
             ShowHideOptions();
         }
+
+        if(Input.GetKeyDown(KeyCode.B))
+        {
+            ShowHideOptions();
+            ShowHideWeaponUpgrade(); // dong 67
+        }
     }
+
+    public void DisableAllPanelWhenStart()
+    {
+        WeaponUpgradePanel.SetActive(false);
+    }    
 
     /// <summary>
     /// Show or hide pause screen
@@ -79,6 +91,26 @@ public class UIController : MonoBehaviour
         else
         {
             OptionsScreen.SetActive(false);
+        }
+    }
+
+    public void ShowHideWeaponUpgrade()
+    {
+        if (!WeaponUpgradeManager.Instance.HasValidRefs())
+        {
+            Debug.LogWarning("[UIController] WeaponUpgradeManager chưa sẵn sàng.");
+            return;
+        }
+
+        // Toggle panel
+        bool active = !WeaponUpgradePanel.activeInHierarchy;
+        WeaponUpgradePanel.SetActive(active);
+
+        if (active)
+        {
+            WeaponUpgradeManager.Instance.StartUpgradeSession();
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
         }
     }
 

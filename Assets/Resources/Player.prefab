@@ -268,13 +268,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: faad87fde554a8942a6f8bcc18d5f11c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsAutomatic: 1
+  gunData: {fileID: 11400000, guid: 471655d94d4811e46afb895be8617493, type: 2}
   MuzzleFlash: {fileID: 4302302289756200447}
   ShotSound: {fileID: 844226435860142146}
-  TimeBetweenShots: 0.35
-  HeatPerShot: 5
-  ShotDamage: 50
-  ADSZoom: 30
+  currentDamage: 0
+  currentFireRate: 0
+  currentHeat: 0
+  currentZoom: 0
+  currentIsAutomatic: 0
 --- !u!82 &844226435860142146
 AudioSource:
   m_ObjectHideFlags: 0
@@ -425,6 +426,7 @@ GameObject:
   - component: {fileID: 8290159588175547941}
   - component: {fileID: 7092454073215978187}
   - component: {fileID: -4872338300072026183}
+  - component: {fileID: 370704758612869289}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -656,6 +658,19 @@ MonoBehaviour:
   knifeObject_Remote: {fileID: 1117211216737646479, guid: ed64243e76fe48349939b90472795a18, type: 3}
   daggerSpawnPoint: {fileID: 7301926722250086930}
   daggerPrefab: {fileID: 1117211216737646479, guid: ed64243e76fe48349939b90472795a18, type: 3}
+--- !u!114 &370704758612869289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3996294800941443827}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae0ce116f8bcd1148ba334d9d39cfea6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CurrentCoin: 5000
 --- !u!1 &3996294800966278944
 GameObject:
   m_ObjectHideFlags: 0
@@ -734,13 +749,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: faad87fde554a8942a6f8bcc18d5f11c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsAutomatic: 0
+  gunData: {fileID: 11400000, guid: 25113a74b92bab747937b11266f1d243, type: 2}
   MuzzleFlash: {fileID: 4302302288791137500}
   ShotSound: {fileID: 4337745680701367374}
-  TimeBetweenShots: 0.1
-  HeatPerShot: 2
-  ShotDamage: 25
-  ADSZoom: 50
+  currentDamage: 0
+  currentFireRate: 0
+  currentHeat: 0
+  currentZoom: 0
+  currentIsAutomatic: 0
 --- !u!82 &4337745680701367374
 AudioSource:
   m_ObjectHideFlags: 0
@@ -884,13 +900,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: faad87fde554a8942a6f8bcc18d5f11c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsAutomatic: 1
+  gunData: {fileID: 11400000, guid: 9b336cfcfccb9b341897a8e200f5442a, type: 2}
   MuzzleFlash: {fileID: 4302302288588816260}
   ShotSound: {fileID: 8080784964059385376}
-  TimeBetweenShots: 0.1
-  HeatPerShot: 1
-  ShotDamage: 15
-  ADSZoom: 45
+  currentDamage: 0
+  currentFireRate: 0
+  currentHeat: 0
+  currentZoom: 0
+  currentIsAutomatic: 0
 --- !u!82 &8080784964059385376
 AudioSource:
   m_ObjectHideFlags: 0

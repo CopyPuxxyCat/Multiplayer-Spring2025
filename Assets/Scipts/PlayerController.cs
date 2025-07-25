@@ -43,9 +43,10 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     public GameObject PlayerHitImpact;
 
-    public int MaxHealth = 200;
-    private int CurrentHealth;
-    private int currentShield;
+    public float MaxHealth = 200;
+    private float CurrentHealth;
+    private float maxShield = 200;
+    private float currentShield;
     public Animator PlayerAnimator;
     public GameObject PlayerModel;
     public Transform ModelGunPoint, GunHolder;
@@ -72,7 +73,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
         if (AllGuns.Length == expectedGunCount)
         {
             photonView.RPC("SetGun", RpcTarget.All, SelectedGun);
-            WeaponUpgradeManager.instance.InitUpgradeData(AllGuns);
         }
 
         // removed spawn here as we want to handle this through player spawner
@@ -83,7 +83,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
             PlayerModel.SetActive(false);
             UIController.instance.HealthSlider.maxValue = MaxHealth;
             UIController.instance.HealthSlider.value = CurrentHealth;
-            UIController.instance.ShieldSlider.maxValue = 200;
+            UIController.instance.ShieldSlider.maxValue = maxShield;
             UIController.instance.ShieldSlider.value = currentShield;
         }
         else
@@ -200,7 +200,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
                     Shoot();
                 }
                 // allow firing weapon if left mouse down and isautomatic allowed
-                if (Input.GetMouseButton(0) && AllGuns[SelectedGun].IsAutomatic)
+                if (Input.GetMouseButton(0) && AllGuns[SelectedGun].currentIsAutomatic)
                 {
                     ShotCounter -= Time.deltaTime;
                     if (ShotCounter <= 0)
@@ -265,7 +265,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
             /// Aim down sight when right click
             if(Input.GetMouseButton(1)) 
             {
-                cameraM.fieldOfView = Mathf.Lerp(cameraM.fieldOfView, AllGuns[SelectedGun].ADSZoom, ADSSpeed * Time.deltaTime);
+                cameraM.fieldOfView = Mathf.Lerp(cameraM.fieldOfView, AllGuns[SelectedGun].currentZoom, ADSSpeed * Time.deltaTime);
                 GunHolder.position = Vector3.Lerp(GunHolder.position, ADSInPoint.position, ADSSpeed * Time.deltaTime);
             }
             else
@@ -287,6 +287,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
             }
         }
     }
+
+   
 
     /// <summary>
     /// Method to open skinpickpanel 
@@ -335,7 +337,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
             {
                 //Debug.Log("Hit " + hit.collider.gameObject.GetPhotonView().Owner.NickName);
                 PhotonNetwork.Instantiate(PlayerHitImpact.name, hit.point, Quaternion.identity);
-                hit.collider.gameObject.GetPhotonView().RPC("DealDamage", RpcTarget.All, photonView.Owner.NickName, AllGuns[SelectedGun].ShotDamage, PhotonNetwork.LocalPlayer.ActorNumber);
+                hit.collider.gameObject.GetPhotonView().RPC("DealDamage", RpcTarget.All, photonView.Owner.NickName, AllGuns[SelectedGun].currentDamage, PhotonNetwork.LocalPlayer.ActorNumber);
             }
             else
             {
@@ -344,8 +346,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
                 Destroy(bulletImpactObject, 1f);
             }
         }
-        ShotCounter = AllGuns[SelectedGun].TimeBetweenShots;
-        HeatCounter += AllGuns[SelectedGun].HeatPerShot;
+        ShotCounter = AllGuns[SelectedGun].currentFireRate;
+        HeatCounter += AllGuns[SelectedGun].currentHeat;
         if(HeatCounter >= MaxHeat)
         {
             HeatCounter = MaxHeat;
@@ -358,11 +360,18 @@ public class PlayerController : MonoBehaviourPunCallbacks
         AllGuns[SelectedGun].ShotSound.Play();
     }
 
+    public void AddArmor(int totalArrmor)
+    {
+        currentShield += totalArrmor;
+        currentShield = Mathf.Clamp(currentShield, 0, maxShield);
+        UIController.instance.ShieldSlider.value = currentShield;
+    }    
+
     /// <summary>
     /// When bullet deal damage
     /// </summary>
     [PunRPC]
-    public void DealDamage(string killer, int damageAmount, int actor)
+    public void DealDamage(string killer, float damageAmount, int actor)
     {
         TakeDamage(killer, damageAmount, actor);
     }
@@ -371,22 +380,24 @@ public class PlayerController : MonoBehaviourPunCallbacks
     /// Sequence to perform when damage is taken or bullet hits player
     /// </summary>
     /// <param name="damager"></param>
-    public void TakeDamage(string killer, int damageAmount, int actor)
+    public void TakeDamage(string killer, float damageAmount, int actor)
     {
         if (photonView.IsMine)
         {
-            //Debug.Log(photonView.Owner.NickName + " been hit by " + killer);
+            Debug.Log(photonView.Owner.NickName + " been hit by " + killer + " take: " + damageAmount + " damage " + "current shield and health" + currentShield + " - " + CurrentHealth);
             if(currentShield > 0 && currentShield >= damageAmount)
             {
                     currentShield -= damageAmount;
                 UIController.instance.ShieldSlider.value = currentShield;
-            }  
-            else if(currentShield > 0 && currentShield < damageAmount)
+            }
+            else if (currentShield > 0 && currentShield < damageAmount)
             {
+                float damageToHealth = damageAmount - currentShield;
                 currentShield = 0;
-                CurrentHealth -= (damageAmount - currentShield);
+                CurrentHealth -= damageToHealth;
                 UIController.instance.ShieldSlider.value = currentShield;
-            }    
+            }
+            else if(currentShield < 0)
             CurrentHealth -= damageAmount;
             if(CurrentHealth <= 0 )
             {
@@ -426,10 +437,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
             gun.gameObject.SetActive(false);
         }
         AllGuns[SelectedGun].gameObject.SetActive(true);
-        if (WeaponUpgradeManager.instance != null)
-        {
-            WeaponUpgradeManager.instance.SetCurrentGun(AllGuns[SelectedGun]);
-        }
+
+        WeaponUpgradeManager.Instance.Init(AllGuns);
 
         AllGuns[SelectedGun].MuzzleFlash.SetActive(false);
     }
