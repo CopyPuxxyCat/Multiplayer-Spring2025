@@ -28,6 +28,8 @@ public class JettController : MonoBehaviourPun, ISkillBlocker
     private SkillUIEntry updraftUI;
     private SkillUIEntry ultimateUI;
 
+    public bool isSkillEnabled { get; set; }
+
     private int dashAttempts = 0;
     private float dashStartTime = 0f;
 
@@ -52,12 +54,14 @@ public class JettController : MonoBehaviourPun, ISkillBlocker
     {
         if (!photonView.IsMine) return;
 
+        //isSkillEnabled = true;
+
         playerController = GetComponent<PlayerController>();
         jettStats = GetComponent<JettStats>();
         playerCamera = Camera.main;
 
         var ui = UIController.instance;
-        AssignSkillUI(ui.skill1UI, ui.smokeUI, ui.updraftUI, ui.ultimateUI);
+        AssignSkillUI(ui.skill1UI, ui.skill2UI, ui.skill3UI, ui.ultimateUI);
 
         if (knifeObject_Local != null)
             knifeObject_Local.SetActive(false);
@@ -67,7 +71,11 @@ public class JettController : MonoBehaviourPun, ISkillBlocker
 
     void Update()
     {
+        Debug.Log("co bat skill jett k: " + isSkillEnabled);
+
         if (!photonView.IsMine) return;
+
+        if (!isSkillEnabled) return;
 
         CheckIsFalling();
 

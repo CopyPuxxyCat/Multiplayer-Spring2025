@@ -39,11 +39,12 @@ public class UIController : MonoBehaviour
     public GameObject EndScreen;
     public GameObject OptionsScreen;
     public SkillUIEntry skill1UI;
-    public SkillUIEntry smokeUI;
-    public SkillUIEntry updraftUI;
+    public SkillUIEntry skill2UI;
+    public SkillUIEntry skill3UI;
     public SkillUIEntry ultimateUI;
     public TMP_Text ingameMoney;
     public GameObject WeaponUpgradePanel;
+    [SerializeField] private GameObject pickSkillPanel;
 
     #endregion
 
@@ -67,12 +68,31 @@ public class UIController : MonoBehaviour
             ShowHideOptions();
             ShowHideWeaponUpgrade(); // dong 67
         }
+
+        if(Input.GetKeyDown(KeyCode.H))
+        {
+            ShowHideOptions();
+            ShowHidePickSkillPanel();
+        }    
     }
 
     public void DisableAllPanelWhenStart()
     {
         WeaponUpgradePanel.SetActive(false);
-    }    
+        pickSkillPanel.SetActive(false);
+    }
+
+    public void ShowHidePickSkillPanel()
+    {
+        bool active = !pickSkillPanel.activeInHierarchy;
+        pickSkillPanel.SetActive(active);
+
+        if (active)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+    }
 
     /// <summary>
     /// Show or hide pause screen

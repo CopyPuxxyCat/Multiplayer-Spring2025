@@ -427,6 +427,8 @@ GameObject:
   - component: {fileID: 7092454073215978187}
   - component: {fileID: -4872338300072026183}
   - component: {fileID: 370704758612869289}
+  - component: {fileID: 2942598249597597158}
+  - component: {fileID: 5356251003208262356}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -658,6 +660,7 @@ MonoBehaviour:
   knifeObject_Remote: {fileID: 1117211216737646479, guid: ed64243e76fe48349939b90472795a18, type: 3}
   daggerSpawnPoint: {fileID: 7301926722250086930}
   daggerPrefab: {fileID: 1117211216737646479, guid: ed64243e76fe48349939b90472795a18, type: 3}
+  isSkillEnabled: 0
 --- !u!114 &370704758612869289
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -671,6 +674,35 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CurrentCoin: 5000
+--- !u!114 &2942598249597597158
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3996294800941443827}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b204fec26e5c7549a15e3035c05dd3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isSkillEnabled: 0
+--- !u!114 &5356251003208262356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3996294800941443827}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eac48fb94b0301048a1e17d16699a4b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  windSkill: {fileID: -4872338300072026183}
+  waterSkill: {fileID: 2942598249597597158}
+  fireSkill: {fileID: 0}
+  earthSkill: {fileID: 0}
 --- !u!1 &3996294800966278944
 GameObject:
   m_ObjectHideFlags: 0

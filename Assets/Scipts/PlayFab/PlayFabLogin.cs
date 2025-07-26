@@ -21,7 +21,6 @@ public class PlayFabLogin : MonoBehaviour
 
     void OnLoginSuccess(LoginResult result)
     {
-        Debug.Log("Logged into PlayFab successfully");
 
         // Reset currency at the start of each match
     }

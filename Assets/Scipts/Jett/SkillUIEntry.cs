@@ -5,19 +5,27 @@ using TMPro;
 public class SkillUIEntry : MonoBehaviour
 {
     [Header("UI")]
-    [SerializeField] private Image iconImage;       
-    [SerializeField] private Image fillImage;       
+    [SerializeField] private Image iconImage;
+    [SerializeField] private Image fillImage;
     [SerializeField] private TextMeshProUGUI countText;
 
-    [Header("Skill Settings")]
-    [SerializeField] private int maxCharges = 3;
-    [SerializeField] private float cooldownDuration = 10f;
+    private int maxCharges;
+    private float cooldownDuration;
 
     private int currentCharges;
     private float cooldownTimer;
     private bool isOnCooldown = false;
 
     public int RemainingCharges => currentCharges;
+
+    public void SetData(SkillUIEntryData data)
+    {
+        maxCharges = data.maxCharges;
+        cooldownDuration = data.cooldownDuration;
+        iconImage.sprite = data.icon;
+        iconImage.color = Color.white;
+    }
+
     public void Initialize()
     {
         currentCharges = maxCharges;
@@ -30,14 +38,12 @@ public class SkillUIEntry : MonoBehaviour
     public void TriggerUse()
     {
         if (!CanUse) return;
-
         currentCharges--;
         cooldownTimer = cooldownDuration;
         isOnCooldown = true;
 
         fillImage.fillAmount = 0f;
         iconImage.color = Color.gray;
-
         UpdateUI();
     }
 
@@ -53,18 +59,8 @@ public class SkillUIEntry : MonoBehaviour
         if (cooldownTimer <= 0f)
         {
             isOnCooldown = false;
-
-            if (currentCharges > 0)
-            {
-                iconImage.color = Color.white;
-                fillImage.fillAmount = 1f;
-            }
-            else
-            {
-                iconImage.color = Color.black;
-                fillImage.fillAmount = 0f;
-            }
-
+            iconImage.color = currentCharges > 0 ? Color.white : Color.black;
+            fillImage.fillAmount = currentCharges > 0 ? 1f : 0f;
             UpdateUI();
         }
     }
@@ -77,5 +73,3 @@ public class SkillUIEntry : MonoBehaviour
 
     public bool CanUse => currentCharges > 0 && !isOnCooldown;
 }
-
-

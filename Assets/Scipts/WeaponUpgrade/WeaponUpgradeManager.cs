@@ -153,9 +153,9 @@ public class WeaponUpgradeManager : MonoBehaviour
             {
                 currencyManager = player.GetComponent<CurrencyManager>();
                 playerController = player.GetComponent<PlayerController>();
-                Debug.Log($"[FindLocalPlayerRefs] Found player: {player.name}");
+                /*Debug.Log($"[FindLocalPlayerRefs] Found player: {player.name}");
                 Debug.Log($"CurrencyManager: {(currencyManager == null ? "null" : "OK")}");
-                Debug.Log($"PlayerController: {(playerController == null ? "null" : "OK")}");
+                Debug.Log($"PlayerController: {(playerController == null ? "null" : "OK")}");*/
                 break;
             }
         }

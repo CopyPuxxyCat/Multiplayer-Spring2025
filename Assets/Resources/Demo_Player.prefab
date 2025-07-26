@@ -268,13 +268,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: faad87fde554a8942a6f8bcc18d5f11c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsAutomatic: 1
-  TimeBetweenShots: 0.35
-  HeatPerShot: 5
+  gunData: {fileID: 0}
   MuzzleFlash: {fileID: 4302302289756200447}
-  ShotDamage: 50
-  ADSZoom: 30
   ShotSound: {fileID: 844226435860142146}
+  currentDamage: 0
+  currentFireRate: 0
+  currentHeat: 0
+  currentZoom: 0
+  currentIsAutomatic: 0
 --- !u!82 &844226435860142146
 AudioSource:
   m_ObjectHideFlags: 0
@@ -532,6 +533,7 @@ MonoBehaviour:
   - {fileID: 3996294801409250731}
   - {fileID: 3996294800193357121}
   - {fileID: 3996294801331046219}
+  SelectedGun: 0
   canShoot: 1
   PlayerHitImpact: {fileID: 7970841168402046768, guid: d40239cac23673b43b8c288c6a7a0bc9, type: 3}
   MaxHealth: 200
@@ -553,6 +555,7 @@ MonoBehaviour:
   ADSInPoint: {fileID: 543553862}
   FootStepSlow: {fileID: 3996388690385327860}
   FootStepFast: {fileID: 5069774941150142454}
+  expectedGunCount: 3
 --- !u!143 &3996294800941443785
 CharacterController:
   m_ObjectHideFlags: 0
@@ -696,13 +699,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: faad87fde554a8942a6f8bcc18d5f11c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsAutomatic: 0
-  TimeBetweenShots: 0.1
-  HeatPerShot: 2
+  gunData: {fileID: 0}
   MuzzleFlash: {fileID: 4302302288791137500}
-  ShotDamage: 25
-  ADSZoom: 50
   ShotSound: {fileID: 4337745680701367374}
+  currentDamage: 0
+  currentFireRate: 0
+  currentHeat: 0
+  currentZoom: 0
+  currentIsAutomatic: 0
 --- !u!82 &4337745680701367374
 AudioSource:
   m_ObjectHideFlags: 0
@@ -846,13 +850,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: faad87fde554a8942a6f8bcc18d5f11c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsAutomatic: 1
-  TimeBetweenShots: 0.1
-  HeatPerShot: 1
+  gunData: {fileID: 0}
   MuzzleFlash: {fileID: 4302302288588816260}
-  ShotDamage: 15
-  ADSZoom: 45
   ShotSound: {fileID: 8080784964059385376}
+  currentDamage: 0
+  currentFireRate: 0
+  currentHeat: 0
+  currentZoom: 0
+  currentIsAutomatic: 0
 --- !u!82 &8080784964059385376
 AudioSource:
   m_ObjectHideFlags: 0
