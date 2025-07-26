@@ -414,12 +414,29 @@ public class PlayerController : MonoBehaviourPunCallbacks
             if(CurrentHealth <= 0 )
             {
                 CurrentHealth = 0;
+                // Gửi RPC sang cho actor của kẻ giết (chính xác)
+                PhotonView killerView = GetPhotonViewByActorNumber(actor);
+                if (killerView != null)
+                {
+                    killerView.RPC("RewardKillerRPC", killerView.Owner, null);
+                }
                 PlayerSpawner.instance.Die(killer);
                 MatchManager.instance.UpdateStatsSend(actor, 0, 1);
             }
             UIController.instance.HealthSlider.value = CurrentHealth;
         }
     }
+
+    [PunRPC]
+    public void RewardKillerRPC()
+    {
+        if (!photonView.IsMine) return;
+
+        GetComponent<CurrencyManager>().AddMoney(500);
+        Debug.Log($"💰 Đã cộng 500 coin cho {PhotonNetwork.NickName}");
+    }
+
+
 
     private void LateUpdate()
     {
@@ -475,5 +492,17 @@ public class PlayerController : MonoBehaviourPunCallbacks
             
             SwitchGun();
         }
+    }
+
+    private PhotonView GetPhotonViewByActorNumber(int actorNumber)
+    {
+        foreach (var view in FindObjectsOfType<PhotonView>())
+        {
+            if (view.Owner != null && view.Owner.ActorNumber == actorNumber && view.CompareTag("Player"))
+            {
+                return view;
+            }
+        }
+        return null;
     }
 }

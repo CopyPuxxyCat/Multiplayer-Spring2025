@@ -14,7 +14,6 @@ public class GameInputManager : MonoBehaviour
             return;
         }
         Instance = this;
-        DontDestroyOnLoad(this.gameObject);
     }
 
     /// <summary>

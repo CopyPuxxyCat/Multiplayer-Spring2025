@@ -6,6 +6,13 @@ using System;
 
 public class CurrencyManager : MonoBehaviour
 {
+    public static CurrencyManager Instance;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
     public int CurrentCoin = 5000;
     public Action<int> OnMoneyChanged;
 
@@ -31,5 +38,6 @@ public class CurrencyManager : MonoBehaviour
     {
         CurrentCoin += amount;
         OnMoneyChanged?.Invoke(CurrentCoin);
+        UIController.instance.UpdateMoneyUI(CurrentCoin);
     }
 }

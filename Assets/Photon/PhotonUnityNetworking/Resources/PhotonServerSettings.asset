@@ -50,6 +50,7 @@ MonoBehaviour:
   - RPC_Updraft
   - RPC_ActivateUltimate
   - SetUltimateActive
+  - RewardKillerRPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
