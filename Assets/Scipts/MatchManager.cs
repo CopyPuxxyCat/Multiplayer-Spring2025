@@ -40,6 +40,7 @@ public class MatchManager : MonoBehaviourPunCallbacks, IOnEventCallback
     public GameState State = GameState.Waiting;
     public float WaitAfterEnding = 5f;
     public bool Perpetual; /// for continous match making
+    public PlayerSkillManager.ElementType preGameSelectedElement;
 
     #endregion
 
@@ -60,6 +61,16 @@ public class MatchManager : MonoBehaviourPunCallbacks, IOnEventCallback
         else
         {
             NewPlayerSend(PhotonNetwork.NickName);
+            if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue("SelectedElement", out object index))
+            {
+                preGameSelectedElement = (PlayerSkillManager.ElementType)(int)index;
+                Debug.Log("[MatchManager] Selected Element: " + preGameSelectedElement);
+            }
+            else
+            {
+                preGameSelectedElement = PlayerSkillManager.ElementType.Wind; // fallback
+                Debug.LogWarning("No selected element found in CustomProperties! Defaulting to Wind.");
+            }
             State = GameState.Playing;
         }
     }

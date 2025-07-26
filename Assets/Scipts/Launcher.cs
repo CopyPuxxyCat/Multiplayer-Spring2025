@@ -189,20 +189,12 @@ public class Launcher : MonoBehaviourPunCallbacks
     /// </summary>
     private void ListAllPlayers()
     {
-        foreach(TMP_Text player in AllPlayerNames)
-        {
-            Destroy(player.gameObject);
-        }
+        foreach (var p in AllPlayerNames)
+            Destroy(p.gameObject);
         AllPlayerNames.Clear();
 
-        Player[] players = PhotonNetwork.PlayerList;
-        for(int i=0;i<players.Length;i++)
-        {
-            TMP_Text newPlayerLabel = Instantiate(PlayerNameLabel, PlayerNameLabel.transform.parent);
-            newPlayerLabel.text = players[i].NickName;
-            newPlayerLabel.gameObject.SetActive(true);
-            AllPlayerNames.Add(newPlayerLabel);
-        }
+        foreach (var player in PhotonNetwork.PlayerList)
+            CreatePlayerEntry(player);
     }
 
     /// <summary>
@@ -211,10 +203,9 @@ public class Launcher : MonoBehaviourPunCallbacks
     /// <param name="newPlayer"></param>
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        TMP_Text newPlayerLabel = Instantiate(PlayerNameLabel, PlayerNameLabel.transform.parent);
-        newPlayerLabel.text = newPlayer.NickName;
-        newPlayerLabel.gameObject.SetActive(true);
-        AllPlayerNames.Add(newPlayerLabel);
+        CreatePlayerEntry(newPlayer);
+
+
     }
 
     /// <summary>
@@ -398,5 +389,18 @@ public class Launcher : MonoBehaviourPunCallbacks
         Application.Quit();
     }
 
+    #endregion
+
+    #region Helper
+    private void CreatePlayerEntry(Player player)
+    {
+        GameObject entryGO = Instantiate(PlayerNameLabel.gameObject, PlayerNameLabel.transform.parent);
+        entryGO.SetActive(true);
+
+        var entryUI = entryGO.GetComponent<PlayerListEntryDropdownUI>();
+        entryUI.Setup(player);
+
+        AllPlayerNames.Add(entryUI.playerNameText);
+    }
     #endregion
 }

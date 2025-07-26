@@ -1,3 +1,4 @@
+using System.Xml.Linq;
 using UnityEngine;
 
 public class PlayerSkillManager : MonoBehaviour
@@ -24,16 +25,23 @@ public class PlayerSkillManager : MonoBehaviour
 
     void Start()
     {
-        currentElement = ElementType.Water;
-        EnableSkill(currentElement);
+        SetSKillFromStartThatPlayerChoose();
     }
+
+    public void SetSKillFromStartThatPlayerChoose()
+    {
+        ElementType element = MatchManager.instance.preGameSelectedElement;
+        currentElement = element;
+
+        DisableAllSkills();
+        GetSkillComponent(element).GetType().GetProperty("isSkillEnabled")?.SetValue(GetSkillComponent(element), true);
+        FindObjectOfType<SkillUIDataBinder>()?.ForceUpdateUI(currentElement);
+    }    
 
     public ElementType GetCurrentElement() => currentElement;
 
     public void EnableSkill(ElementType element)
     {
-        Debug.Log("goi doi skill");
-        Debug.Log("current element" + currentElement);
         if (element == currentElement) return;
         if (skillSwitchCount >= maxSkillSwitches) return;
 

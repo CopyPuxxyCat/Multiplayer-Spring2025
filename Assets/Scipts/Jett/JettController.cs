@@ -54,7 +54,7 @@ public class JettController : MonoBehaviourPun, ISkillBlocker
     {
         if (!photonView.IsMine) return;
 
-        //isSkillEnabled = true;
+        isSkillEnabled = false;
 
         playerController = GetComponent<PlayerController>();
         jettStats = GetComponent<JettStats>();
@@ -71,8 +71,6 @@ public class JettController : MonoBehaviourPun, ISkillBlocker
 
     void Update()
     {
-        Debug.Log("co bat skill jett k: " + isSkillEnabled);
-
         if (!photonView.IsMine) return;
 
         if (!isSkillEnabled) return;
