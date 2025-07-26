@@ -56,7 +56,6 @@ public class PlayerSkillManager : MonoBehaviour
 
     private void DisableAllSkills()
     {
-        Debug.Log("goi disable skill");
         SetSkillEnabled(windSkill, false);
         SetSkillEnabled(waterSkill, false);
         SetSkillEnabled(fireSkill, false);

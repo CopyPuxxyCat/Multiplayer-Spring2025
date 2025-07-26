@@ -78,13 +78,14 @@ public class PlayerController : MonoBehaviourPunCallbacks
         // removed spawn here as we want to handle this through player spawner
         /// if in first person view, disable player model locally not on network
         /// it will be visible on network to other players
-        if(photonView.IsMine)
+        if (photonView.IsMine)
         {
             PlayerModel.SetActive(false);
             UIController.instance.HealthSlider.maxValue = MaxHealth;
             UIController.instance.HealthSlider.value = CurrentHealth;
             UIController.instance.ShieldSlider.maxValue = maxShield;
             UIController.instance.ShieldSlider.value = currentShield;
+            StartCoroutine(WaitForPlayerAndInit());
         }
         else
         {
@@ -384,7 +385,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     {
         if (photonView.IsMine)
         {
-            Debug.Log(photonView.Owner.NickName + " been hit by " + killer + " take: " + damageAmount + " damage " + "current shield and health" + currentShield + " - " + CurrentHealth);
+          //Debug.Log(photonView.Owner.NickName + " been hit by " + killer + " take: " + damageAmount + " damage " + "current shield and health" + currentShield + " - " + CurrentHealth);
             if(currentShield > 0 && currentShield >= damageAmount)
             {
                     currentShield -= damageAmount;
@@ -428,6 +429,13 @@ public class PlayerController : MonoBehaviourPunCallbacks
                 cameraM.transform.rotation = MatchManager.instance.MapCamPoint.rotation;
             }
         }
+    }
+
+    private IEnumerator WaitForPlayerAndInit()
+    {
+        yield return new WaitForSeconds(0.2f); // đợi cho chắc chắn player đã spawn
+
+        WeaponUpgradeManager.Instance.FindLocalPlayerRefs();
     }
 
     /// <summary>

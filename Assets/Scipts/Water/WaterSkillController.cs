@@ -18,7 +18,5 @@ public class WaterSkillController : MonoBehaviourPun
         if (!photonView.IsMine) return;
 
         if (!isSkillEnabled) return;
-
-        Debug.Log("bat skill nuoc len");
     }
 }

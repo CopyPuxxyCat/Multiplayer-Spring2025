@@ -29,16 +29,6 @@ public class WeaponUpgradeManager : MonoBehaviour
 
     private void Start()
     {
-        // Tự động tìm player local khi bắt đầu
-        StartCoroutine(WaitForPlayerAndInit());
-        
-    }
-
-    private IEnumerator WaitForPlayerAndInit()
-    {
-        yield return new WaitForSeconds(0.2f); // đợi cho chắc chắn player đã spawn
-
-        FindLocalPlayerRefs(); // Gán currencyManager và playerController nếu có
     }
 
     public bool HasValidRefs()

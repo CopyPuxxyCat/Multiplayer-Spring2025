@@ -66,7 +66,7 @@ public class UIController : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.B))
         {
             ShowHideOptions();
-            ShowHideWeaponUpgrade(); // dong 67
+            ShowHideWeaponUpgrade(); // dong 69
         }
 
         if(Input.GetKeyDown(KeyCode.H))
