@@ -24,7 +24,7 @@ public class PlayerSkillManager : MonoBehaviour
 
     void Start()
     {
-        currentElement = ElementType.Wind;
+        currentElement = ElementType.Water;
         EnableSkill(currentElement);
     }
 

@@ -3,7 +3,7 @@ using Photon.Pun;
 
 public class DaggerProjectile : MonoBehaviourPun
 {
-    [SerializeField] private int damage = 25;
+    [SerializeField] private float damage = 25;
     [SerializeField] private float lifeTime = 5f;
 
     private void OnEnable()
