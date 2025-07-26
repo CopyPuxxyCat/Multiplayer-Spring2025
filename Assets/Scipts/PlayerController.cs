@@ -275,10 +275,11 @@ public class PlayerController : MonoBehaviourPunCallbacks
                 GunHolder.position = Vector3.Lerp(GunHolder.position, ADSOutPoint.position, ADSSpeed * Time.deltaTime);
             }
 
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                Cursor.lockState = CursorLockMode.None;
-            }
+                if (Input.GetKeyDown(KeyCode.Escape))
+                {
+                    GameInputManager.Instance.UnlockInput(); 
+                }
+
             else if (Cursor.lockState == CursorLockMode.None)
             {
                 if (Input.GetMouseButtonDown(0) && !UIController.instance.OptionsScreen.activeInHierarchy)

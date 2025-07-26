@@ -65,13 +65,11 @@ public class UIController : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.B))
         {
-            ShowHideOptions();
-            ShowHideWeaponUpgrade(); // dong 69
+            ShowHideWeaponUpgrade(); // dong 68
         }
 
         if(Input.GetKeyDown(KeyCode.H))
         {
-            ShowHideOptions();
             ShowHidePickSkillPanel();
         }    
     }
@@ -88,10 +86,9 @@ public class UIController : MonoBehaviour
         pickSkillPanel.SetActive(active);
 
         if (active)
-        {
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-        }
+            GameInputManager.Instance.LockInput(); 
+        else
+            GameInputManager.Instance.UnlockInput(); 
     }
 
     /// <summary>
@@ -99,20 +96,19 @@ public class UIController : MonoBehaviour
     /// </summary>
     public void ShowHideOptions()
     {
-        if(!OptionsScreen.activeInHierarchy)
+        bool active = !OptionsScreen.activeInHierarchy;
+        OptionsScreen.SetActive(active);
+
+        if (active)
         {
-            OptionsScreen.SetActive(true);
-            if(Cursor.lockState != CursorLockMode.Locked)
-            {
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
-            }
+            GameInputManager.Instance.LockInput();  
         }
         else
         {
-            OptionsScreen.SetActive(false);
+            GameInputManager.Instance.UnlockInput();
         }
     }
+
 
     public void ShowHideWeaponUpgrade()
     {
@@ -122,17 +118,20 @@ public class UIController : MonoBehaviour
             return;
         }
 
-        // Toggle panel
         bool active = !WeaponUpgradePanel.activeInHierarchy;
         WeaponUpgradePanel.SetActive(active);
 
         if (active)
         {
             WeaponUpgradeManager.Instance.StartUpgradeSession();
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
+            GameInputManager.Instance.LockInput();
+        }
+        else
+        {
+            GameInputManager.Instance.UnlockInput();
         }
     }
+
 
     /// <summary>
     /// close current game and return to main menu

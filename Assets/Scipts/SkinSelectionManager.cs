@@ -52,13 +52,10 @@ public class SkinSelectionManager : MonoBehaviour
     {
         SkinPickScreen.SetActive(state);
 
-        Cursor.visible = state;
-        Cursor.lockState = state ? CursorLockMode.None : CursorLockMode.Locked;
-
-        if (playerController != null)
-        {
-            playerController.canShoot = !state;
-        }
+        if (state)
+            GameInputManager.Instance.LockInput(); 
+        else
+            GameInputManager.Instance.UnlockInput(); 
     }
     #endregion
 }

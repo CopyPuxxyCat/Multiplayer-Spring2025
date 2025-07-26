@@ -2837,9 +2837,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e93369f2ba1f4a4682e5f9b883e8ae7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skill1UI: {fileID: 0}
-  skill2UI: {fileID: 0}
-  skill3UI: {fileID: 0}
+  skill1UI: {fileID: 1731031617}
+  skill2UI: {fileID: 1273299391}
+  skill3UI: {fileID: 1201633468}
   ultimateUI: {fileID: 437352324}
   elementSkillSets:
   - elementType: 0
