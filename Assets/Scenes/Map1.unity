@@ -2837,20 +2837,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e93369f2ba1f4a4682e5f9b883e8ae7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dashUI: {fileID: 1731031617}
-  smokeUI: {fileID: 1273299391}
-  updraftUI: {fileID: 1201633468}
+  skill1UI: {fileID: 0}
+  skill2UI: {fileID: 0}
+  skill3UI: {fileID: 0}
   ultimateUI: {fileID: 437352324}
   elementSkillSets:
   - elementType: 0
-    dashSkill: {fileID: 11400000, guid: fcdd09209348b6c4fab30e4cd7847a2b, type: 2}
-    smokeSkill: {fileID: 11400000, guid: 5d37c8ca66fb3d847be571fa9c3b3e13, type: 2}
-    updraftSkill: {fileID: 11400000, guid: 3cbaeac341a99074cbf333a59e4897dc, type: 2}
+    Skill1: {fileID: 11400000, guid: fcdd09209348b6c4fab30e4cd7847a2b, type: 2}
+    Skill2: {fileID: 11400000, guid: 5d37c8ca66fb3d847be571fa9c3b3e13, type: 2}
+    Skill3: {fileID: 11400000, guid: 3cbaeac341a99074cbf333a59e4897dc, type: 2}
     ultimateSkill: {fileID: 11400000, guid: a49b3b6212d3a324fab36905789fb601, type: 2}
   - elementType: 1
-    dashSkill: {fileID: 11400000, guid: fa3c752e47029f94dbaaa9f04db60c5d, type: 2}
-    smokeSkill: {fileID: 11400000, guid: 2e56b08f51f4b9041ade5eed7d9a12dc, type: 2}
-    updraftSkill: {fileID: 11400000, guid: 1a04c6965d0f17b4ca551190ddd25d9f, type: 2}
+    Skill1: {fileID: 11400000, guid: fa3c752e47029f94dbaaa9f04db60c5d, type: 2}
+    Skill2: {fileID: 11400000, guid: 2e56b08f51f4b9041ade5eed7d9a12dc, type: 2}
+    Skill3: {fileID: 11400000, guid: 1a04c6965d0f17b4ca551190ddd25d9f, type: 2}
     ultimateSkill: {fileID: 11400000, guid: 8ea11ebdb162997428a769057e74bf7c, type: 2}
 --- !u!4 &281607975
 Transform:

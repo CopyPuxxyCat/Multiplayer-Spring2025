@@ -9,16 +9,16 @@ public class SkillUIDataBinder : MonoBehaviour
     public class ElementSkillUIDefinition
     {
         public PlayerSkillManager.ElementType elementType;
-        public SkillUIEntryData dashSkill;
-        public SkillUIEntryData smokeSkill;
-        public SkillUIEntryData updraftSkill;
+        public SkillUIEntryData Skill1;
+        public SkillUIEntryData Skill2;
+        public SkillUIEntryData Skill3;
         public SkillUIEntryData ultimateSkill;
     }
 
     [Header("Skill UI References")]
-    [SerializeField] private SkillUIEntry dashUI;
-    [SerializeField] private SkillUIEntry smokeUI;
-    [SerializeField] private SkillUIEntry updraftUI;
+    [SerializeField] private SkillUIEntry skill1UI;
+    [SerializeField] private SkillUIEntry skill2UI;
+    [SerializeField] private SkillUIEntry skill3UI;
     [SerializeField] private SkillUIEntry ultimateUI;
 
     [Header("Element Skill Data Sets")]
@@ -65,14 +65,14 @@ public class SkillUIDataBinder : MonoBehaviour
             return;
         }
 
-        dashUI.SetData(set.dashSkill);
-        smokeUI.SetData(set.smokeSkill);
-        updraftUI.SetData(set.updraftSkill);
+        skill1UI.SetData(set.Skill1);
+        skill2UI.SetData(set.Skill2);
+        skill3UI.SetData(set.Skill3);
         ultimateUI.SetData(set.ultimateSkill);
 
-        dashUI.Initialize();
-        smokeUI.Initialize();
-        updraftUI.Initialize();
+        skill1UI.Initialize();
+        skill2UI.Initialize();
+        skill3UI.Initialize();
         ultimateUI.Initialize();
     }
 }
