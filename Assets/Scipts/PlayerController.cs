@@ -397,8 +397,11 @@ public class PlayerController : MonoBehaviourPunCallbacks
                 CurrentHealth -= damageToHealth;
                 UIController.instance.ShieldSlider.value = currentShield;
             }
-            else if(currentShield < 0)
-            CurrentHealth -= damageAmount;
+            else if(currentShield <= 0)
+            {
+                CurrentHealth -= damageAmount;
+            }    
+
             if(CurrentHealth <= 0 )
             {
                 CurrentHealth = 0;
