@@ -57,7 +57,7 @@ public class JettController : MonoBehaviourPun, ISkillBlocker
         playerCamera = Camera.main;
 
         var ui = UIController.instance;
-        AssignSkillUI(ui.dashUI, ui.smokeUI, ui.updraftUI, ui.ultimateUI);
+        AssignSkillUI(ui.skill1UI, ui.smokeUI, ui.updraftUI, ui.ultimateUI);
 
         if (knifeObject_Local != null)
             knifeObject_Local.SetActive(false);

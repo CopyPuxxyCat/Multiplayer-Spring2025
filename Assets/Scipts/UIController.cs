@@ -38,7 +38,7 @@ public class UIController : MonoBehaviour
     public LeaderBoardPlayer leaderBoardPlayerDisplay;
     public GameObject EndScreen;
     public GameObject OptionsScreen;
-    public SkillUIEntry dashUI;
+    public SkillUIEntry skill1UI;
     public SkillUIEntry smokeUI;
     public SkillUIEntry updraftUI;
     public SkillUIEntry ultimateUI;
