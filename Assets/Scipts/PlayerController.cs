@@ -368,6 +368,13 @@ public class PlayerController : MonoBehaviourPunCallbacks
         UIController.instance.ShieldSlider.value = currentShield;
     }    
 
+    public void AddHealth(int healAmount)
+    {
+        CurrentHealth += healAmount;
+        CurrentHealth = Mathf.Clamp(CurrentHealth, 0, MaxHealth);
+        UIController.instance.HealthSlider.value = CurrentHealth;
+    }   
+
     /// <summary>
     /// When bullet deal damage
     /// </summary>
