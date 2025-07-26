@@ -660,7 +660,6 @@ MonoBehaviour:
   knifeObject_Remote: {fileID: 1117211216737646479, guid: ed64243e76fe48349939b90472795a18, type: 3}
   daggerSpawnPoint: {fileID: 7301926722250086930}
   daggerPrefab: {fileID: 1117211216737646479, guid: ed64243e76fe48349939b90472795a18, type: 3}
-  isSkillEnabled: 0
 --- !u!114 &370704758612869289
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -686,7 +685,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b204fec26e5c7549a15e3035c05dd3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isSkillEnabled: 0
 --- !u!114 &5356251003208262356
 MonoBehaviour:
   m_ObjectHideFlags: 0
