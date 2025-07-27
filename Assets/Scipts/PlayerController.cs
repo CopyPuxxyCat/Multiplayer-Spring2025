@@ -376,7 +376,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     public void AddArmor(int totalArrmor)
     {
-        Debug.Log("goi add armor ");
         currentShield += totalArrmor;
         currentShield = Mathf.Clamp(currentShield, 0, maxShield);
         UIController.instance.ShieldSlider.value = currentShield;
@@ -384,7 +383,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     public void AddHealth(int healAmount)
     {
-        Debug.Log("goi add shield ");
         CurrentHealth += healAmount;
         CurrentHealth = Mathf.Clamp(CurrentHealth, 0, MaxHealth);
         UIController.instance.HealthSlider.value = CurrentHealth;

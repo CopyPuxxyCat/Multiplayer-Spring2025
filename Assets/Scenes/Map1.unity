@@ -15619,6 +15619,10 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Decoration
       objectReference: {fileID: 0}
+    - target: {fileID: 5233112405309087440, guid: 0b91dd02b4dad5e4e9c023c58f82d6a6, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5252682845850649624, guid: 0b91dd02b4dad5e4e9c023c58f82d6a6, type: 3}
       propertyPath: m_Layer
       value: 6
