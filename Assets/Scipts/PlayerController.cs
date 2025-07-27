@@ -362,8 +362,21 @@ public class PlayerController : MonoBehaviourPunCallbacks
         AllGuns[SelectedGun].ShotSound.Play();
     }
 
+    [PunRPC]
+    public void RPC_AddArmor(int amount)
+    {
+        AddArmor(amount); 
+    }
+
+    [PunRPC]
+    public void RPC_AddHealth(int amount)
+    {
+        AddHealth(amount); 
+    }
+
     public void AddArmor(int totalArrmor)
     {
+        Debug.Log("goi add armor ");
         currentShield += totalArrmor;
         currentShield = Mathf.Clamp(currentShield, 0, maxShield);
         UIController.instance.ShieldSlider.value = currentShield;
@@ -371,6 +384,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     public void AddHealth(int healAmount)
     {
+        Debug.Log("goi add shield ");
         CurrentHealth += healAmount;
         CurrentHealth = Mathf.Clamp(CurrentHealth, 0, MaxHealth);
         UIController.instance.HealthSlider.value = CurrentHealth;
@@ -464,6 +478,29 @@ public class PlayerController : MonoBehaviourPunCallbacks
     }
 
     /// <summary>
+    /// stunplayer
+    /// </summary>
+
+    [PunRPC]
+    public void ApplyStun(float duration)
+    {
+        StartCoroutine(StunRoutine(duration));
+    }
+
+    private IEnumerator StunRoutine(float time)
+    {
+        canShoot = false;
+        MoveSpeed = 0;
+        RunSpeed = 0;
+
+        yield return new WaitForSeconds(time);
+
+        MoveSpeed = 5f; // hoặc lấy từ config
+        RunSpeed = 8f;
+        canShoot = true;
+    }
+
+    /// <summary>
     /// Swtich between guns
     /// </summary>
     public void SwitchGun()
@@ -492,6 +529,19 @@ public class PlayerController : MonoBehaviourPunCallbacks
             
             SwitchGun();
         }
+    }
+
+    [PunRPC]
+    public void RPC_ShowGun(bool show)
+    {
+        if (SelectedGun < 0 || SelectedGun >= AllGuns.Length) return;
+
+        AllGuns[SelectedGun].gameObject.SetActive(show);
+    }
+
+    public void ShowGun(bool show)
+    {
+        photonView.RPC("RPC_ShowGun", RpcTarget.All, show);
     }
 
     private PhotonView GetPhotonViewByActorNumber(int actorNumber)
