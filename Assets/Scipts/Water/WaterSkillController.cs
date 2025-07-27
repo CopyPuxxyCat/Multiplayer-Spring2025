@@ -8,21 +8,25 @@ public class WaterSkillController : MonoBehaviourPun, ISkillBlocker
     [SerializeField] GameObject orbPrefab;
     [SerializeField] GameObject slowFieldPrefab;
     [SerializeField] GameObject tidalWavePrefab;
-    [SerializeField] GameObject waveAimIndicatorPrefab;
 
     [Header("Heal Effects")]
     [SerializeField] GameObject healEffect;
     [SerializeField] GameObject shieldEffect;
 
+    [Header("Transforms")]
     [SerializeField] Transform orbSpawnPoint;
     [SerializeField] Transform waveSpawnPoint;
 
+    [Header("Heal Orb")]
     [SerializeField] GameObject healOrbObject;
     [SerializeField] GameObject[] gunsToDisable;
 
-    private GameObject waveIndicatorInstance;
-    private bool isAimingWave = false;
+    [Header("Ghost Path")]
+    [SerializeField] LineRenderer ghostPathLine;
+    [SerializeField] float maxWaveDistance = 30f;
+    [SerializeField] LayerMask groundLayer;
 
+    private bool isAimingWave = false;
     private bool isHoldingOrb = false;
     private bool isShieldHeal = false;
 
@@ -30,10 +34,7 @@ public class WaterSkillController : MonoBehaviourPun, ISkillBlocker
     private Camera cam;
     private PlayerController playerController;
 
-    private SkillUIEntry skill1UI;
-    private SkillUIEntry skill2UI;
-    private SkillUIEntry skill3UI;
-    private SkillUIEntry ultimateUI;
+    private SkillUIEntry skill1UI, skill2UI, skill3UI, ultimateUI;
 
     public bool isSkillEnabled { get; set; }
 
@@ -66,53 +67,39 @@ public class WaterSkillController : MonoBehaviourPun, ISkillBlocker
             return;
         }
 
-        if (Input.GetKeyDown(KeyCode.Q) && skill1UI.CanUse)
-            UseOrb();
-
-        if (Input.GetKeyDown(KeyCode.E) && skill2UI.CanUse)
-            StartHealMode(false);
-
-        if (Input.GetKeyDown(KeyCode.C) && skill3UI.CanUse)
-            StartHealMode(true);
-
-        if (Input.GetKeyDown(KeyCode.R) && ultimateUI.CanUse)
-            BeginWaveAim();
+        if (Input.GetKeyDown(KeyCode.Q) && skill1UI.CanUse) UseOrb();
+        if (Input.GetKeyDown(KeyCode.E) && skill2UI.CanUse) StartHealMode(false);
+        if (Input.GetKeyDown(KeyCode.C) && skill3UI.CanUse) StartHealMode(true);
+        if (Input.GetKeyDown(KeyCode.R) && ultimateUI.CanUse) BeginWaveAim();
     }
 
     #region Skill 1 - Orb
     void UseOrb()
     {
         skill1UI.TriggerUse();
-
-        GameObject orb = PhotonNetwork.Instantiate("Water/WaterOrb", orbSpawnPoint.position, cam.transform.rotation);
-        Rigidbody rb = orb.GetComponent<Rigidbody>();
-        rb.velocity = cam.transform.forward * waterStats.orbThrowForce;
-
+        var orb = PhotonNetwork.Instantiate("Water/WaterOrb", orbSpawnPoint.position, cam.transform.rotation);
+        orb.GetComponent<Rigidbody>().velocity = cam.transform.forward * waterStats.orbThrowForce;
         orb.GetComponent<WaterOrb>().Init(waterStats.slowFieldDuration, slowFieldPrefab);
     }
     #endregion
 
-    #region Skill 2 & 3 - Heal Mode
+    #region Skill 2 & 3 - Heal
     void StartHealMode(bool isShield)
     {
-        if (isShield)
-            skill3UI.TriggerUse();
-        else
-            skill2UI.TriggerUse();
+        if (isShield) skill3UI.TriggerUse();
+        else skill2UI.TriggerUse();
 
         isHoldingOrb = true;
         isShieldHeal = isShield;
-
         healOrbObject.SetActive(true);
-        foreach (var gun in gunsToDisable)
-            gun.SetActive(false);
+        foreach (var gun in gunsToDisable) gun.SetActive(false);
     }
 
     void HandleHealMode()
     {
         if (!isHoldingOrb) return;
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0)) // Heal đồng đội
         {
             Ray ray = cam.ViewportPointToRay(Vector3.one * 0.5f);
             if (Physics.Raycast(ray, out RaycastHit hit))
@@ -120,41 +107,33 @@ public class WaterSkillController : MonoBehaviourPun, ISkillBlocker
                 if (hit.collider.CompareTag("Player"))
                 {
                     var target = hit.collider.GetComponent<PlayerController>();
-                    var targetPV = target.GetComponent<PhotonView>();
+                    var pv = target.GetComponent<PhotonView>();
 
-                    if (targetPV.IsMine)
+                    if (pv.IsMine)
                     {
                         if (isShieldHeal) target.AddArmor(waterStats.selfShieldAmount);
                         else target.AddHealth(waterStats.selfHealAmount);
                     }
                     else
                     {
-                        if (isShieldHeal)
-                            targetPV.RPC("RPC_AddArmor", targetPV.Owner, waterStats.allyShieldAmount);
-                        else
-                            targetPV.RPC("RPC_AddHealth", targetPV.Owner, waterStats.allyHealAmount);
+                        if (isShieldHeal) pv.RPC("RPC_AddArmor", pv.Owner, waterStats.allyShieldAmount);
+                        else pv.RPC("RPC_AddHealth", pv.Owner, waterStats.allyHealAmount);
                     }
 
-                    if (isShieldHeal)
-                        targetPV.RPC("PlayShieldEffect", RpcTarget.All);
-                    else
-                        targetPV.RPC("PlayHealEffect", RpcTarget.All);
+                    if (isShieldHeal) pv.RPC("PlayShieldEffect", RpcTarget.All);
+                    else pv.RPC("PlayHealEffect", RpcTarget.All);
                 }
             }
             EndHealMode();
         }
 
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(1)) // Heal bản thân
         {
-            if (isShieldHeal)
-                photonView.RPC("RPC_AddArmor", RpcTarget.All, waterStats.selfShieldAmount);
-            else
-                photonView.RPC("RPC_AddHealth", RpcTarget.All, waterStats.selfHealAmount);
+            if (isShieldHeal) photonView.RPC("RPC_AddArmor", RpcTarget.All, waterStats.selfShieldAmount);
+            else photonView.RPC("RPC_AddHealth", RpcTarget.All, waterStats.selfHealAmount);
 
-            if (isShieldHeal)
-                photonView.RPC("PlayShieldEffect", RpcTarget.All);
-            else
-                photonView.RPC("PlayHealEffect", RpcTarget.All);
+            if (isShieldHeal) photonView.RPC("PlayShieldEffect", RpcTarget.All);
+            else photonView.RPC("PlayHealEffect", RpcTarget.All);
 
             EndHealMode();
         }
@@ -164,74 +143,64 @@ public class WaterSkillController : MonoBehaviourPun, ISkillBlocker
     {
         isHoldingOrb = false;
         healOrbObject.SetActive(false);
-        foreach (var gun in gunsToDisable)
-            gun.SetActive(true);
+        foreach (var gun in gunsToDisable) gun.SetActive(true);
     }
     #endregion
 
-    #region Ultimate - Tidal Wave
+    #region Ultimate - Ghost Path
     void BeginWaveAim()
     {
         isAimingWave = true;
-        waveIndicatorInstance = Instantiate(waveAimIndicatorPrefab);
-
-        foreach (var gun in gunsToDisable)
-            gun.SetActive(false);
+        ghostPathLine.enabled = true;
+        foreach (var gun in gunsToDisable) gun.SetActive(false);
     }
 
     void HandleWaveAiming()
     {
+        Vector3 start = waveSpawnPoint.position;
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hit, 100f, LayerMask.GetMask("Ground")))
+
+        if (Physics.Raycast(ray, out RaycastHit hit, 100f, groundLayer))
         {
-            waveIndicatorInstance.transform.position = hit.point;
-            Vector3 dir = hit.point - transform.position;
-            dir.y = 0;
-            if (dir.sqrMagnitude > 0.01f)
-                waveIndicatorInstance.transform.rotation = Quaternion.LookRotation(dir.normalized);
+            Vector3 end = hit.point;
+            Vector3 dir = (end - start).normalized;
+            end = start + dir * Mathf.Min(Vector3.Distance(start, end), maxWaveDistance);
+
+            ghostPathLine.SetPosition(0, start + Vector3.up * 0.1f);
+            ghostPathLine.SetPosition(1, end + Vector3.up * 0.1f);
         }
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0)) // Hủy
         {
-            isAimingWave = false;
-            Destroy(waveIndicatorInstance);
-            EndWaveMode();
+            EndWaveAim();
         }
 
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(1)) // Thi triển
         {
-            isAimingWave = false;
             ultimateUI.TriggerUse();
+            Vector3 direction = (ghostPathLine.GetPosition(1) - ghostPathLine.GetPosition(0)).normalized;
+            Vector3 spawnPos = ghostPathLine.GetPosition(0);
 
-            Vector3 spawnPos = waveIndicatorInstance.transform.position;
-            Quaternion spawnRot = waveIndicatorInstance.transform.rotation;
-            Destroy(waveIndicatorInstance);
+            var wave = PhotonNetwork.Instantiate("Water/TidalWave", spawnPos, Quaternion.LookRotation(direction));
+            wave.GetComponent<TidalWave>().Init(direction, waterStats.waveSpeed, waterStats.stunDuration);
 
-            GameObject wave = PhotonNetwork.Instantiate("Water/TidalWave", spawnPos, spawnRot);
-            wave.GetComponent<TidalWave>().Init(spawnRot * Vector3.forward, waterStats.waveSpeed, waterStats.stunDuration);
-
-            EndWaveMode();
+            EndWaveAim();
         }
     }
 
-    void EndWaveMode()
+    void EndWaveAim()
     {
-        foreach (var gun in gunsToDisable)
-            gun.SetActive(true);
+        isAimingWave = false;
+        ghostPathLine.enabled = false;
+        foreach (var gun in gunsToDisable) gun.SetActive(true);
     }
     #endregion
 
+    #region RPC & Utility
     public void AssignSkillUI(SkillUIEntry s1, SkillUIEntry s2, SkillUIEntry s3, SkillUIEntry ult)
     {
-        skill1UI = s1;
-        skill2UI = s2;
-        skill3UI = s3;
-        ultimateUI = ult;
-
-        skill1UI.Initialize();
-        skill2UI.Initialize();
-        skill3UI.Initialize();
-        ultimateUI.Initialize();
+        skill1UI = s1; skill2UI = s2; skill3UI = s3; ultimateUI = ult;
+        skill1UI.Initialize(); skill2UI.Initialize(); skill3UI.Initialize(); ultimateUI.Initialize();
     }
 
     public bool ShouldBlockShooting => isHoldingOrb || isAimingWave;
@@ -246,4 +215,5 @@ public class WaterSkillController : MonoBehaviourPun, ISkillBlocker
         yield return new WaitForSeconds(duration);
         obj.SetActive(false);
     }
+    #endregion
 }

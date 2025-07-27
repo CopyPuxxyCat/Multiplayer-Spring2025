@@ -430,6 +430,7 @@ GameObject:
   - component: {fileID: 3937995674244493937}
   - component: {fileID: 2942598249597597158}
   - component: {fileID: 5356251003208262356}
+  - component: {fileID: 2580804265849034354}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -716,7 +717,6 @@ MonoBehaviour:
   orbPrefab: {fileID: 4594517317586968593, guid: 440a1d3dd9490a247b8d6654654da804, type: 3}
   slowFieldPrefab: {fileID: 1340850399625753553, guid: 2a90ed88d58f10249bf0450305db3685, type: 3}
   tidalWavePrefab: {fileID: 354606521802593935, guid: c43ba71dae15611488ee7b66cd91a088, type: 3}
-  waveAimIndicatorPrefab: {fileID: 9137877873206422922, guid: 154b5a3a5af2feb4ba08aaf025c645d6, type: 3}
   healEffect: {fileID: 1799090252061276079}
   shieldEffect: {fileID: 4420545334271205718}
   orbSpawnPoint: {fileID: 4672491745262316751}
@@ -726,6 +726,11 @@ MonoBehaviour:
   - {fileID: 3996294801331046217}
   - {fileID: 3996294801409250729}
   - {fileID: 3996294800193357127}
+  ghostPathLine: {fileID: 2580804265849034354}
+  maxWaveDistance: 30
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!114 &5356251003208262356
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -742,6 +747,110 @@ MonoBehaviour:
   waterSkill: {fileID: 2942598249597597158}
   fireSkill: {fileID: 0}
   earthSkill: {fileID: 0}
+--- !u!120 &2580804265849034354
+LineRenderer:
+  serializedVersion: 2
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3996294800941443827}
+  m_Enabled: 0
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 0
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 819d1bb22467aa541be895fcfb5a7a24, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_Positions:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  m_Parameters:
+    serializedVersion: 3
+    widthMultiplier: 1
+    widthCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0.19981277
+        value: 0.20407486
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    colorGradient:
+      serializedVersion: 2
+      key0: {r: 0.19741535, g: 0.8792453, b: 0.87789667, a: 1}
+      key1: {r: 1, g: 1, b: 1, a: 1}
+      key2: {r: 0, g: 0, b: 0, a: 0}
+      key3: {r: 0, g: 0, b: 0, a: 0}
+      key4: {r: 0, g: 0, b: 0, a: 0}
+      key5: {r: 0, g: 0, b: 0, a: 0}
+      key6: {r: 0, g: 0, b: 0, a: 0}
+      key7: {r: 0, g: 0, b: 0, a: 0}
+      ctime0: 0
+      ctime1: 65535
+      ctime2: 0
+      ctime3: 0
+      ctime4: 0
+      ctime5: 0
+      ctime6: 0
+      ctime7: 0
+      atime0: 0
+      atime1: 65535
+      atime2: 0
+      atime3: 0
+      atime4: 0
+      atime5: 0
+      atime6: 0
+      atime7: 0
+      m_Mode: 0
+      m_ColorSpace: 0
+      m_NumColorKeys: 2
+      m_NumAlphaKeys: 2
+    numCornerVertices: 0
+    numCapVertices: 0
+    alignment: 0
+    textureMode: 0
+    textureScale: {x: 1, y: 1}
+    shadowBias: 0.5
+    generateLightingData: 0
+  m_MaskInteraction: 0
+  m_UseWorldSpace: 1
+  m_Loop: 0
+  m_ApplyActiveColorSpace: 1
 --- !u!1 &3996294800966278944
 GameObject:
   m_ObjectHideFlags: 0
