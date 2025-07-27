@@ -2852,6 +2852,11 @@ MonoBehaviour:
     Skill2: {fileID: 11400000, guid: 2e56b08f51f4b9041ade5eed7d9a12dc, type: 2}
     Skill3: {fileID: 11400000, guid: 1a04c6965d0f17b4ca551190ddd25d9f, type: 2}
     ultimateSkill: {fileID: 11400000, guid: 8ea11ebdb162997428a769057e74bf7c, type: 2}
+  - elementType: 2
+    Skill1: {fileID: 11400000, guid: fa3c752e47029f94dbaaa9f04db60c5d, type: 2}
+    Skill2: {fileID: 11400000, guid: 2e56b08f51f4b9041ade5eed7d9a12dc, type: 2}
+    Skill3: {fileID: 11400000, guid: 1a04c6965d0f17b4ca551190ddd25d9f, type: 2}
+    ultimateSkill: {fileID: 11400000, guid: 8ea11ebdb162997428a769057e74bf7c, type: 2}
 --- !u!4 &281607975
 Transform:
   m_ObjectHideFlags: 0
