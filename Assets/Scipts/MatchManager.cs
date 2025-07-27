@@ -64,7 +64,6 @@ public class MatchManager : MonoBehaviourPunCallbacks, IOnEventCallback
             if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue("SelectedElement", out object index))
             {
                 preGameSelectedElement = (PlayerSkillManager.ElementType)(int)index;
-                Debug.Log("[MatchManager] Selected Element: " + preGameSelectedElement);
             }
             else
             {
