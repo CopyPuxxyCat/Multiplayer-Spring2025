@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c2fc84d96af3bd43b5689c12fd0a184, type: 3}
   m_Name: FireFlash_SkillUIEntryData
   m_EditorClassIdentifier: 
-  icon: {fileID: 21300000, guid: 42396199b135cac47945d0d04ffa04f9, type: 3}
-  cooldownDuration: 5
-  maxCharges: 3
+  icon: {fileID: 21300000, guid: 7df99b59e1c18c7428cc8399b6e6908a, type: 3}
+  cooldownDuration: 2
+  maxCharges: 2

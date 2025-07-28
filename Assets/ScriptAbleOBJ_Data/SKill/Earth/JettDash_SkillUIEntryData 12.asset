@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0c2fc84d96af3bd43b5689c12fd0a184, type: 3}
-  m_Name: FireUltimate_SkillUIEntryData
+  m_Name: JettDash_SkillUIEntryData 12
   m_EditorClassIdentifier: 
-  icon: {fileID: 21300000, guid: c4da0ad684f17e04b87e9a0db96eb2aa, type: 3}
+  icon: {fileID: 21300000, guid: 42396199b135cac47945d0d04ffa04f9, type: 3}
   cooldownDuration: 5
-  maxCharges: 2
+  maxCharges: 3

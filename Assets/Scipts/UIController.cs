@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Photon.Pun;
+using System.Collections;
 
 /// <summary>
 /// Singleton
@@ -45,6 +46,7 @@ public class UIController : MonoBehaviour
     public TMP_Text ingameMoney;
     public GameObject WeaponUpgradePanel;
     [SerializeField] private GameObject pickSkillPanel;
+    [SerializeField] private GameObject flashPanel;
 
     #endregion
 
@@ -132,6 +134,31 @@ public class UIController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// flash screen
+    /// </summary>
+
+    public void FlashScreen()
+    {
+        StartCoroutine(FlashRoutine());
+    }
+
+    IEnumerator FlashRoutine()
+    {
+        flashPanel.SetActive(true);
+        CanvasGroup cg = flashPanel.GetComponent<CanvasGroup>();
+        cg.alpha = 1f;
+
+        float time = 0.5f;
+        while (time > 0)
+        {
+            time -= Time.deltaTime;
+            cg.alpha = Mathf.Clamp01(time / 0.5f);
+            yield return null;
+        }
+
+        flashPanel.SetActive(false);
+    }
 
     /// <summary>
     /// close current game and return to main menu

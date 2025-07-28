@@ -365,12 +365,14 @@ public class PlayerController : MonoBehaviourPunCallbacks
     [PunRPC]
     public void RPC_AddArmor(int amount)
     {
+        if (!photonView.IsMine) return;
         AddArmor(amount); 
     }
 
     [PunRPC]
     public void RPC_AddHealth(int amount)
     {
+        if (!photonView.IsMine) return;
         AddHealth(amount); 
     }
 
@@ -482,6 +484,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     [PunRPC]
     public void ApplyStun(float duration)
     {
+        if (!photonView.IsMine) return;
         StartCoroutine(StunRoutine(duration));
     }
 
@@ -496,6 +499,20 @@ public class PlayerController : MonoBehaviourPunCallbacks
         MoveSpeed = 5f; // hoặc lấy từ config
         RunSpeed = 8f;
         canShoot = true;
+    }
+
+    [PunRPC]
+    public void ApplyFlash(float duration)
+    {
+        if (!photonView.IsMine) return;
+        StartCoroutine(FlashRoutine(duration));
+    }
+
+    IEnumerator FlashRoutine(float duration)
+    {
+        UIController.instance.FlashScreen(); // gọi flash trắng màn hình
+        yield return new WaitForSeconds(duration);
+        // kết thúc flash
     }
 
     /// <summary>

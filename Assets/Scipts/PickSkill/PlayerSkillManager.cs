@@ -42,6 +42,7 @@ public class PlayerSkillManager : MonoBehaviour
 
     public void EnableSkill(ElementType element)
     {
+        Debug.Log("current skill: " + currentElement);
         if (element == currentElement) return;
         if (skillSwitchCount >= maxSkillSwitches) return;
 

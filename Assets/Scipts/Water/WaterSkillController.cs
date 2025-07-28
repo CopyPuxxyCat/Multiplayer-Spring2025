@@ -129,11 +129,11 @@ public class WaterSkillController : MonoBehaviourPun, ISkillBlocker
 
         if (Input.GetMouseButtonDown(1)) // Heal bản thân
         {
-            if (isShieldHeal) photonView.RPC("RPC_AddArmor", RpcTarget.All, waterStats.selfShieldAmount);
-            else photonView.RPC("RPC_AddHealth", RpcTarget.All, waterStats.selfHealAmount);
+            if (isShieldHeal) photonView.RPC("RPC_AddArmor", photonView.Owner, waterStats.selfShieldAmount);
+            else photonView.RPC("RPC_AddHealth", photonView.Owner, waterStats.selfHealAmount);
 
-            if (isShieldHeal) photonView.RPC("PlayShieldEffect", RpcTarget.All);
-            else photonView.RPC("PlayHealEffect", RpcTarget.All);
+            if (isShieldHeal) photonView.RPC("PlayShieldEffect", photonView.Owner);
+            else photonView.RPC("PlayHealEffect", photonView.Owner);
 
             EndHealMode();
         }
