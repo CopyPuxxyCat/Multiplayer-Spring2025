@@ -24,6 +24,11 @@ public class PlayerListEntryDropdownUI : MonoBehaviourPunCallbacks
             SetupDropdownOptions();
             elementDropdown.onValueChanged.AddListener(OnElementChanged);
         }
+
+        if (targetPlayer != null && targetPlayer != PhotonNetwork.LocalPlayer)
+        {
+            StartCoroutine(SyncRemotePlayerElement());
+        }
     }
 
     public void Setup(Player player)
@@ -33,6 +38,22 @@ public class PlayerListEntryDropdownUI : MonoBehaviourPunCallbacks
         elementDropdown.interactable = player == PhotonNetwork.LocalPlayer;
 
         SetElementDefault(player);
+
+    }
+
+    IEnumerator SyncRemotePlayerElement()
+    {
+        yield return new WaitForEndOfFrame();
+
+        if (targetPlayer.CustomProperties.TryGetValue("SelectedElement", out object idx))
+        {
+            int index = (int)idx;
+            selectedIndex = index;
+            elementDropdown.SetValueWithoutNotify(index);
+            elementDropdown.captionImage.sprite = elementSprites[index];
+
+            StartCoroutine(UpdateDropdownItemSprites());
+        }
     }
 
     void SetupDropdownOptions()

@@ -10,7 +10,7 @@ public class WeaponUpgradeManager : MonoBehaviour
 {
     public static WeaponUpgradeManager Instance;
 
-    public int[] upgradeCosts = { 400, 600, 800, 1000 };
+    public int[] upgradeCosts = { 400, 600, 800, 1000, 1000, 1000 };
     public int smallArmorCost = 500;
     public int bigArmorCost = 1000;
 

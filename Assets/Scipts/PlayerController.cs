@@ -41,6 +41,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
     public int SelectedGun;
     public bool canShoot = true;
 
+    [HideInInspector] public bool IsSlowed = false;
+
     public GameObject PlayerHitImpact;
 
     public float MaxHealth = 200;
@@ -407,7 +409,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     {
         if (photonView.IsMine)
         {
-          //Debug.Log(photonView.Owner.NickName + " been hit by " + killer + " take: " + damageAmount + " damage " + "current shield and health" + currentShield + " - " + CurrentHealth);
+          Debug.Log(photonView.Owner.NickName + " been hit by " + killer + " take: " + damageAmount + " damage " + "current shield and health" + currentShield + " - " + CurrentHealth);
             if(currentShield > 0 && currentShield >= damageAmount)
             {
                     currentShield -= damageAmount;
@@ -472,7 +474,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     private IEnumerator WaitForPlayerAndInit()
     {
-        yield return new WaitForSeconds(0.2f); // đợi cho chắc chắn player đã spawn
+        yield return new WaitForSeconds(0.2f); 
 
         WeaponUpgradeManager.Instance.FindLocalPlayerRefs();
     }
@@ -496,7 +498,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
         yield return new WaitForSeconds(time);
 
-        MoveSpeed = 5f; // hoặc lấy từ config
+        MoveSpeed = 5f; 
         RunSpeed = 8f;
         canShoot = true;
     }
@@ -510,10 +512,34 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     IEnumerator FlashRoutine(float duration)
     {
-        UIController.instance.FlashScreen(); // gọi flash trắng màn hình
+        UIController.instance.FlashScreen(); 
         yield return new WaitForSeconds(duration);
-        // kết thúc flash
+        
     }
+
+    /// <summary>
+    /// slow
+    /// </summary>
+
+    [PunRPC]
+    public void RPC_ApplySlow(float slowFactor, float duration, bool islow)
+    {
+        IsSlowed = islow;
+        if (!IsSlowed) return;
+        MoveSpeed = 2f;
+        RunSpeed = 2f;
+
+        StartCoroutine(ResetSpeedAfter(duration));
+    }
+
+    IEnumerator ResetSpeedAfter(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        MoveSpeed = 5f;
+        RunSpeed = 8f;
+        IsSlowed = false;
+    }
+
 
     /// <summary>
     /// Swtich between guns

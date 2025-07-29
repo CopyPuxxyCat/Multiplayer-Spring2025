@@ -2,50 +2,63 @@ using UnityEngine;
 using Photon.Pun;
 using System.Collections;
 
+[RequireComponent(typeof(Rigidbody))]
 public class FlashBall : MonoBehaviourPun
 {
-    [SerializeField] float speed = 8f;
-    [SerializeField] float delayToExplode = 1f;
-    private Vector3 moveDir;
+    [SerializeField] float speed = 45f;
+    [SerializeField] float explodeDelay = 1f;
+    [SerializeField] float curveStrength = 10f;
 
-    private float radius;
-    private float duration;
+    private Rigidbody rb;
+    private Vector3 initialDirection;
 
-    public void Init(Vector3 dir, float radius, float duration)
+    private bool hasExploded = false;
+
+    public void Init(Vector3 direction)
     {
-        moveDir = dir.normalized;
-        this.radius = radius;
-        this.duration = duration;
+        initialDirection = direction.normalized;
+    }
 
+    void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+        rb.velocity = initialDirection * speed + Vector3.up * 4f;
         StartCoroutine(ExplodeAfterDelay());
     }
 
-    void Update()
+    void FixedUpdate()
     {
-        transform.position += moveDir * speed * Time.deltaTime;
+        if (hasExploded) return;
+
+        Vector3 sideForce = Vector3.Cross(Vector3.up, initialDirection).normalized * curveStrength;
+        rb.AddForce(sideForce, ForceMode.Acceleration);
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (!photonView.IsMine || hasExploded) return;
+        Explode();
     }
 
     IEnumerator ExplodeAfterDelay()
     {
-        yield return new WaitForSeconds(delayToExplode);
-        Explode();
+        yield return new WaitForSeconds(explodeDelay);
+        if (!hasExploded) Explode();
     }
 
     void Explode()
     {
-        if (!photonView.IsMine) return;
+        hasExploded = true;
 
-        Collider[] hits = Physics.OverlapSphere(transform.position, radius);
-        foreach (var col in hits)
+        // Kích hoạt vùng flash (child)
+        Transform flashArea = transform.Find("FlashArea");
+        if (flashArea != null && photonView.IsMine)
         {
-            if (col.CompareTag("Player"))
-            {
-                PhotonView pv = col.GetComponent<PhotonView>();
-                if (pv != null)
-                    pv.RPC("FlashScreen", pv.Owner, duration);
-            }
+            flashArea.gameObject.SetActive(true);
+            flashArea.GetComponent<FlashArea>().Explode(photonView.Owner, photonView.ViewID);
         }
 
-        PhotonNetwork.Destroy(gameObject);
+        // Delay nhỏ để đảm bảo RPC gửi xong
+        Destroy(gameObject, 0.05f);
     }
 }

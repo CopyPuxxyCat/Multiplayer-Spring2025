@@ -14736,6 +14736,7 @@ GameObject:
   - component: {fileID: 1791822427}
   - component: {fileID: 1791822426}
   - component: {fileID: 1791822425}
+  - component: {fileID: 1791822428}
   m_Layer: 5
   m_Name: Flash
   m_TagString: Untagged
@@ -14826,6 +14827,18 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!225 &1791822428
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1791822423}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1791824115 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8009987137999418058, guid: 0b91dd02b4dad5e4e9c023c58f82d6a6, type: 3}
@@ -19204,6 +19217,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: UICanvas
       objectReference: {fileID: 0}
+    - target: {fileID: 377363181413465515, guid: 8b14033ade7de574da7ba592ca2d51b7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 384133606912155726, guid: 8b14033ade7de574da7ba592ca2d51b7, type: 3}
       propertyPath: m_text
       value: 10
@@ -19802,15 +19819,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5643759440676203457, guid: 8b14033ade7de574da7ba592ca2d51b7, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5643759440676203457, guid: 8b14033ade7de574da7ba592ca2d51b7, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5643759440676203457, guid: 8b14033ade7de574da7ba592ca2d51b7, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5674346883844612604, guid: 8b14033ade7de574da7ba592ca2d51b7, type: 3}
       propertyPath: m_Spacing.x
@@ -19842,15 +19859,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6025538578683534859, guid: 8b14033ade7de574da7ba592ca2d51b7, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6025538578683534859, guid: 8b14033ade7de574da7ba592ca2d51b7, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6025538578683534859, guid: 8b14033ade7de574da7ba592ca2d51b7, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6384433122674257372, guid: 8b14033ade7de574da7ba592ca2d51b7, type: 3}
       propertyPath: m_AnchorMax.x

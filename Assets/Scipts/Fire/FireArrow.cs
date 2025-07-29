@@ -12,21 +12,20 @@ public class FireArrow : MonoBehaviourPun
         this.damage = damage;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    void OnCollisionEnter(Collision collision)
     {
         if (!photonView.IsMine) return;
 
-        Collider[] hits = Physics.OverlapSphere(transform.position, radius);
-        foreach (var col in hits)
+        Debug.Log("va cham cai gi do");
+        // Kích hoạt child xử lý damage
+        Transform dmgArea = transform.Find("ExplosionArea");
+        if (dmgArea != null)
         {
-            if (col.CompareTag("Player"))
-            {
-                var pc = col.GetComponent<PlayerController>();
-                if (pc != null)
-                    pc.TakeDamage(photonView.Owner.NickName, damage, photonView.ViewID);
-            }
+            dmgArea.gameObject.SetActive(true);
+            dmgArea.GetComponent<ArrowExplosion>().Explode(photonView.Owner, damage, photonView.ViewID);
         }
 
-        PhotonNetwork.Destroy(gameObject);
+        // Delay để đảm bảo RPC gửi
+        Destroy(gameObject, 0.05f);
     }
 }

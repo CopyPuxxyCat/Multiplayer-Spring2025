@@ -668,6 +668,7 @@ MonoBehaviour:
   - {fileID: 3996294801331046219}
   SelectedGun: 0
   canShoot: 1
+  IsSlowed: 0
   PlayerHitImpact: {fileID: 7970841168402046768, guid: d40239cac23673b43b8c288c6a7a0bc9, type: 3}
   MaxHealth: 200
   PlayerAnimator: {fileID: 1046021142001106604}
@@ -862,17 +863,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 476a73ba1417b5446a4e7ad12c83f5bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  flashRadius: 6
-  flashDelay: 2
-  flashDuration: 3
+  flashRadius: 20
+  flashDuration: 5
+  molotovDuration: 6
+  molotovRadius: 5
+  molotovDamageAmount: 10
+  molotovHealAmount: 15
   buffDuration: 10
   buffSpeedMultiplier: 1.5
-  molotovRadius: 5
-  molotovDuration: 6
-  molotovHealAmount: 15
-  molotovDamageAmount: 10
-  arrowRadius: 4
-  arrowDamage: 25
+  arrowRadius: 6
+  arrowDamage: 180
+  throwSpeed: 15
 --- !u!114 &498415486874057420
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -899,7 +900,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   flashBallPrefab: {fileID: 7790646203348194795, guid: b8b0f90d050998246822d70008702a35, type: 3}
   molotovBallPrefab: {fileID: 1886174113089224585, guid: 00f9a8501805f6b46ab52ce0a9cd5d95, type: 3}
-  molotovFieldPrefab: {fileID: 736598393122004451, guid: 3780ec5f0f3d802448f3f2ad123852cb, type: 3}
+  molotovFieldPrefab: {fileID: 5062250275519181720, guid: 3780ec5f0f3d802448f3f2ad123852cb, type: 3}
   arrowPrefab: {fileID: 1638750304843524329, guid: 39ee6c13c441e7e4fac4700942c60049, type: 3}
   bowObject: {fileID: 1654910051473666798}
   buffEffect: {fileID: 1799090252061276079}

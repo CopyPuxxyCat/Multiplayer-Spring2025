@@ -143,7 +143,8 @@ public class WaterSkillController : MonoBehaviourPun, ISkillBlocker
     {
         isHoldingOrb = false;
         healOrbObject.SetActive(false);
-        foreach (var gun in gunsToDisable) gun.SetActive(true);
+
+        playerController.SwitchGun();
     }
     #endregion
 
@@ -192,7 +193,7 @@ public class WaterSkillController : MonoBehaviourPun, ISkillBlocker
     {
         isAimingWave = false;
         ghostPathLine.enabled = false;
-        foreach (var gun in gunsToDisable) gun.SetActive(true);
+        playerController.SwitchGun();
     }
     #endregion
 

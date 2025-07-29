@@ -1,28 +1,28 @@
 using UnityEngine;
 using Photon.Pun;
-using System.Collections.Generic;
 
 public class SlowField : MonoBehaviourPun
 {
-    public float slowAmount = 0.5f;
-    public float radius = 4f;
+    [Header("Slow Settings")]
+    public float slowAmount = 0.5f;   
+    public float radius = 4f;         
+    public float duration = 5f;       
+    private bool Slow = true;
 
-    private float duration = 5f;
-    private float startTime;
-
-    private HashSet<PlayerController> slowedPlayers = new();
+    private float timer;
 
     public void Init(float dur)
     {
         duration = dur;
-        startTime = Time.time;
+        timer = 0f;
     }
 
     void Update()
     {
-        if (!PhotonNetwork.IsMasterClient) return;
+        if (!photonView.IsMine) return;
 
-        if (Time.time - startTime > duration)
+        timer += Time.deltaTime;
+        if (timer > duration)
         {
             PhotonNetwork.Destroy(gameObject);
             return;
@@ -33,28 +33,12 @@ public class SlowField : MonoBehaviourPun
         {
             if (hit.CompareTag("Player"))
             {
-                var pc = hit.GetComponent<PlayerController>();
-                if (pc != null && !slowedPlayers.Contains(pc))
+                var pc = hit.GetComponent<PhotonView>();
+                if (pc != null)
                 {
-                    pc.MoveSpeed *= slowAmount;
-                    pc.RunSpeed *= slowAmount;
-                    slowedPlayers.Add(pc);
+                    pc.RPC("RPC_ApplySlow", pc.Owner, slowAmount, 5.5f, Slow);
                 }
             }
         }
-    }
-
-    void OnDestroy()
-    {
-        // Reset speed for all affected players
-        foreach (var pc in slowedPlayers)
-        {
-            if (pc != null)
-            {
-                pc.MoveSpeed /= slowAmount;
-                pc.RunSpeed /= slowAmount;
-            }
-        }
-        slowedPlayers.Clear();
     }
 }

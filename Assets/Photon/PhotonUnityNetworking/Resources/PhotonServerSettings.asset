@@ -59,6 +59,7 @@ MonoBehaviour:
   - RPC_AddArmor
   - RPC_AddHealth
   - ApplyFlash
+  - RPC_ApplySlow
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

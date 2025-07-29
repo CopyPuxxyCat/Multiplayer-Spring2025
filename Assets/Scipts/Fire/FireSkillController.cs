@@ -57,11 +57,8 @@ public class FireSkillController : MonoBehaviourPun, ISkillBlocker
             return;
         }
 
-
         if (Input.GetKeyDown(KeyCode.Q) && skill1UI.CanUse)
-        {
             StartFlashBall();
-        }
 
         if (Input.GetKeyDown(KeyCode.E) && skill2UI.CanUse)
             StartBuff();
@@ -75,7 +72,6 @@ public class FireSkillController : MonoBehaviourPun, ISkillBlocker
 
     void StartFlashBall()
     {
-
         skill1UI.TriggerUse();
         isHoldingBall = true;
         isMolotovMode = false;
@@ -94,25 +90,23 @@ public class FireSkillController : MonoBehaviourPun, ISkillBlocker
 
     void HandleHoldBall()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
         {
-            ThrowBall(-transform.right);
-        }
-        else if (Input.GetMouseButtonDown(1))
-        {
-            ThrowBall(transform.right);
+            Vector3 forward = cam.transform.forward;
+            Vector3 side = Input.GetMouseButtonDown(0) ? -transform.right : transform.right;
+            Vector3 throwDir = (forward + side * 0.5f + Vector3.up * 0.3f).normalized;
+
+            ThrowBall(throwDir);
         }
     }
 
     void ThrowBall(Vector3 direction)
     {
-        GameObject ball = PhotonNetwork.Instantiate(
-            isMolotovMode ? "Fire/FireMolotovBall" : "Fire/FlashBall",
-            castPoint.position, Quaternion.identity
-        );
+        string prefabName = isMolotovMode ? "Fire/FireMolotovBall" : "Fire/FlashBall";
 
+        GameObject ball = PhotonNetwork.Instantiate(prefabName, castPoint.position, Quaternion.identity);
         Rigidbody rb = ball.GetComponent<Rigidbody>();
-        rb.velocity = (direction + transform.forward).normalized * 10f;
+        rb.velocity = direction * fireStats.throwSpeed;
 
         if (isMolotovMode)
         {
@@ -125,16 +119,12 @@ public class FireSkillController : MonoBehaviourPun, ISkillBlocker
         }
         else
         {
-            ball.GetComponent<FlashBall>().Init(
-                rb.velocity,
-                fireStats.flashRadius,
-                fireStats.flashDuration
-            );
+            ball.GetComponent<FlashBall>().Init(direction);
         }
 
         holdBallObject.SetActive(false);
         isHoldingBall = false;
-        ToggleWeapons(true);
+        playerController.SwitchGun();
     }
 
     void StartBuff()
@@ -173,7 +163,7 @@ public class FireSkillController : MonoBehaviourPun, ISkillBlocker
             if (arrowCount <= 0)
             {
                 bowObject.SetActive(false);
-                ToggleWeapons(true);
+                playerController.SwitchGun();
             }
         }
     }

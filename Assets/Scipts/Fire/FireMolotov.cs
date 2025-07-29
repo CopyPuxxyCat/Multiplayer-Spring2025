@@ -1,13 +1,11 @@
 using UnityEngine;
 using Photon.Pun;
-using System.Collections;
 
 public class FireMolotov : MonoBehaviourPun
 {
-    private float duration;
-    private float radius;
-    private float damageAmount;
+    private float duration, radius, damageAmount;
     private int healAmount;
+    private bool hasExploded;
 
     public void Init(float duration, float radius, float damage, int heal)
     {
@@ -15,36 +13,29 @@ public class FireMolotov : MonoBehaviourPun
         this.radius = radius;
         this.damageAmount = damage;
         this.healAmount = heal;
-
-        StartCoroutine(EffectRoutine());
     }
 
-    IEnumerator EffectRoutine()
+    void OnCollisionEnter(Collision collision)
     {
-        float timer = 0f;
+        if (!photonView.IsMine || hasExploded) return;
 
-        while (timer < duration)
+        if (collision.collider.CompareTag("Ground") && collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
-            Collider[] hits = Physics.OverlapSphere(transform.position, radius);
-            foreach (var col in hits)
-            {
-                if (col.CompareTag("Player"))
-                {
-                    var pc = col.GetComponent<PlayerController>();
-                    if (pc.photonView.IsMine)
-                    {
-                        if (pc.CompareTag("Player"))
-                            pc.AddHealth(healAmount);
-                        else
-                            pc.TakeDamage(photonView.Owner.NickName, damageAmount, photonView.ViewID);
-                    }
-                }
-            }
+            hasExploded = true;
+            GameObject field = PhotonNetwork.Instantiate("Fire/FireMolotovField", transform.position, Quaternion.identity);
+            field.GetComponent<FireMolotovField>().Init(duration, radius, damageAmount, healAmount);
 
-            timer += 1f;
-            yield return new WaitForSeconds(1f);
+            PhotonNetwork.Destroy(gameObject);
         }
-
-        PhotonNetwork.Destroy(gameObject);
+        else
+        {
+            // Nảy nếu chưa va vào Ground
+            Rigidbody rb = GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                Vector3 bounce = Vector3.Reflect(rb.velocity, collision.contacts[0].normal);
+                rb.velocity = bounce * 0.6f;
+            }
+        }
     }
 }
