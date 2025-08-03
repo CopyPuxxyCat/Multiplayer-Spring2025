@@ -1,0 +1,25 @@
+bot:
+model: gpt-4
+summary: true
+
+review
+enable: true
+review: "@coderabbit"
+comment_mode: suggestion
+max_comment: 30
+languages:["cs"]
+exclude_paths:
+- "Library/"
+- "Temp/"
+- "Obj/"
+- "Build/"
+- "Logs/"
+- "Packages/"
+- "Asset/Plugins/"
+- "Asset/StreamingAssets/"
+- "*.meta"
+
+autofix:
+enable: false
+auto_approve:
+anable: false
