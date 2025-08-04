@@ -77,6 +77,7 @@ public class FireSkillController : MonoBehaviourPun, ISkillBlocker
         isMolotovMode = false;
         holdBallObject.SetActive(true);
         ToggleWeapons(false);
+        playerController.CallCoroutineToggleCanShoot(false, 0f);
     }
 
     void StartMolotov()
@@ -86,6 +87,7 @@ public class FireSkillController : MonoBehaviourPun, ISkillBlocker
         isMolotovMode = true;
         holdBallObject.SetActive(true);
         ToggleWeapons(false);
+        playerController.CallCoroutineToggleCanShoot(false, 0f);
     }
 
     void HandleHoldBall()
@@ -135,6 +137,7 @@ public class FireSkillController : MonoBehaviourPun, ISkillBlocker
         holdBallObject.SetActive(false);
         isHoldingBall = false;
         playerController.SwitchGun();
+        playerController.CallCoroutineToggleCanShoot(true, 0.5f);
     }
 
     void StartBuff()
@@ -157,6 +160,7 @@ public class FireSkillController : MonoBehaviourPun, ISkillBlocker
         bowObject.SetActive(true);
         arrowCount = 2;
         ToggleWeapons(false);
+        playerController.CallCoroutineToggleCanShoot(false, 0f);
     }
 
     void HandleArrowShooting()
@@ -174,6 +178,7 @@ public class FireSkillController : MonoBehaviourPun, ISkillBlocker
             {
                 bowObject.SetActive(false);
                 playerController.SwitchGun();
+                playerController.CallCoroutineToggleCanShoot(true, 0.5f);
             }
         }
     }

@@ -261,8 +261,18 @@ public class JettController : MonoBehaviourPun, ISkillBlocker
 
         if (photonView.IsMine)
         {
-            foreach (Gun gun in playerController.AllGuns)
-                gun.gameObject.SetActive(!isActive);
+            if(isActive == true)
+            {
+                foreach (Gun gun in playerController.AllGuns)
+                    gun.gameObject.SetActive(!isActive);
+                playerController.CallCoroutineToggleCanShoot(false, 0f);
+            }    
+            else
+            {
+                playerController.SwitchGun();
+                playerController.CallCoroutineToggleCanShoot(true, 0.5f);
+            }
+
             if (knifeObject_Local != null)
                 knifeObject_Local.SetActive(isActive);
         }

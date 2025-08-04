@@ -323,6 +323,18 @@ public class PlayerController : MonoBehaviourPunCallbacks
     }
 
     // end skin pick
+
+    public void CallCoroutineToggleCanShoot(bool CanShoot, float time)
+    {
+        StartCoroutine(ToggelCanShoot(CanShoot, time));
+    }
+
+    IEnumerator ToggelCanShoot(bool CanShoot, float time)
+    {
+        yield return new WaitForSeconds(time);
+        canShoot = CanShoot;
+    }    
+
     private void Shoot()
     {
         if(canShoot == false) { return; }
