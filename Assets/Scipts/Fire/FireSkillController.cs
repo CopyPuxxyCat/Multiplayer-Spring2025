@@ -90,17 +90,27 @@ public class FireSkillController : MonoBehaviourPun, ISkillBlocker
 
     void HandleHoldBall()
     {
-        if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(0))
         {
-            Vector3 forward = cam.transform.forward;
-            Vector3 side = Input.GetMouseButtonDown(0) ? -transform.right : transform.right;
-            Vector3 throwDir = (forward + side * 0.5f + Vector3.up * 0.3f).normalized;
-
-            ThrowBall(throwDir);
+            Vector3 side = -transform.right;
+            Vector3 dir = GetThrowDirection(side);
+            ThrowBall(dir, side);
+        }
+        else if (Input.GetMouseButtonDown(1))
+        {
+            Vector3 side = transform.right;
+            Vector3 dir = GetThrowDirection(side);
+            ThrowBall(dir, side);
         }
     }
 
-    void ThrowBall(Vector3 direction)
+    Vector3 GetThrowDirection(Vector3 sideDirection)
+    {
+        Vector3 baseDir = cam.transform.forward;
+        return (baseDir + sideDirection * 0.5f + Vector3.up * 0.3f).normalized;
+    }
+
+    void ThrowBall(Vector3 direction, Vector3 curveDir)
     {
         string prefabName = isMolotovMode ? "Fire/FireMolotovBall" : "Fire/FlashBall";
 
@@ -119,7 +129,7 @@ public class FireSkillController : MonoBehaviourPun, ISkillBlocker
         }
         else
         {
-            ball.GetComponent<FlashBall>().Init(direction);
+            ball.GetComponent<FlashBall>().Init(direction, curveDir);
         }
 
         holdBallObject.SetActive(false);

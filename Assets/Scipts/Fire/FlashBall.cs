@@ -11,12 +11,14 @@ public class FlashBall : MonoBehaviourPun
 
     private Rigidbody rb;
     private Vector3 initialDirection;
+    private Vector3 curveDirection;
 
     private bool hasExploded = false;
 
-    public void Init(Vector3 direction)
+    public void Init(Vector3 direction, Vector3 curveDir)
     {
         initialDirection = direction.normalized;
+        curveDirection = curveDir.normalized;
     }
 
     void Start()
@@ -29,9 +31,7 @@ public class FlashBall : MonoBehaviourPun
     void FixedUpdate()
     {
         if (hasExploded) return;
-
-        Vector3 sideForce = Vector3.Cross(Vector3.up, initialDirection).normalized * curveStrength;
-        rb.AddForce(sideForce, ForceMode.Acceleration);
+        rb.AddForce(curveDirection * curveStrength, ForceMode.Acceleration);
     }
 
     void OnCollisionEnter(Collision collision)
@@ -58,7 +58,6 @@ public class FlashBall : MonoBehaviourPun
             flashArea.GetComponent<FlashArea>().Explode(photonView.Owner, photonView.ViewID);
         }
 
-        // Delay nhỏ để đảm bảo RPC gửi xong
         Destroy(gameObject, 0.05f);
     }
 }

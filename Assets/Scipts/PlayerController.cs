@@ -292,8 +292,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
         }
     }
 
-   
-
     /// <summary>
     /// Method to open skinpickpanel 
     /// </summary>

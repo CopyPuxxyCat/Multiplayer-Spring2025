@@ -26,6 +26,15 @@ public class FireArrow : MonoBehaviourPun
         }
 
         // Delay để đảm bảo RPC gửi
-        Destroy(gameObject, 0.05f);
+        photonView.RPC("ExplodeArrow", RpcTarget.All);
+    }
+
+    [PunRPC]
+    void ExplodeArrow()
+    {
+        // Optional: trigger effect on all clients
+
+        if (photonView.IsMine) 
+            PhotonNetwork.Destroy(gameObject);
     }
 }
