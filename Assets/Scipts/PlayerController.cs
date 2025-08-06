@@ -4,6 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using Photon.Pun;
 using System.Linq;
+using Photon.Realtime;
 
 public class PlayerController : MonoBehaviourPunCallbacks
 {
@@ -69,7 +70,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
         Cursor.lockState = CursorLockMode.Locked;
         cameraM = Camera.main;
         UIController.instance.WeaponTemperatureSlider.maxValue = MaxHeat;
-        //SwitchGun();
+        MiniMapController.instance.RegisterPlayer(gameObject);
+
         CurrentHealth = MaxHealth;
         currentShield = 25;
         if (AllGuns.Length == expectedGunCount)

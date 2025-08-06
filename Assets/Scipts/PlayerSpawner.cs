@@ -44,6 +44,7 @@ public class PlayerSpawner : MonoBehaviour
         Transform spawnPoint = SpawnManager.instance.GetSpawnPoint();
         UIController.instance.OptionsScreen.SetActive(false);
         player = PhotonNetwork.Instantiate(PlayerPrefab.name, spawnPoint.position, spawnPoint.rotation);
+        //MiniMapController.instance.RegisterPlayer(player);
     }
 
     /// <summary>
