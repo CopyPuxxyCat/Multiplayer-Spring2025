@@ -328,6 +328,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     public void CallCoroutineToggleCanShoot(bool CanShoot, float time)
     {
+        Debug.Log("goi toggle");
         StartCoroutine(ToggelCanShoot(CanShoot, time));
     }
 

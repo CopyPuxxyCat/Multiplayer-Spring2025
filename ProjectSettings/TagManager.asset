@@ -9,6 +9,7 @@ TagManager:
   - Decoration
   - Skill
   - MinimapViewPoint
+  - AI
   layers:
   - Default
   - TransparentFX

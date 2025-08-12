@@ -30,6 +30,7 @@ public class PlayerSkillManager : MonoBehaviour
 
     public void SetSKillFromStartThatPlayerChoose()
     {
+        
         ElementType element = MatchManager.instance.preGameSelectedElement;
         currentElement = element;
 

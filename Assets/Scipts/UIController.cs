@@ -80,6 +80,7 @@ public class UIController : MonoBehaviour
     {
         WeaponUpgradePanel.SetActive(false);
         pickSkillPanel.SetActive(false);
+        earthMinimapPanel.SetActive(false);
     }
 
     public void ShowHidePickSkillPanel()
@@ -182,4 +183,21 @@ public class UIController : MonoBehaviour
         ingameMoney.text = "$" + amount.ToString();
     }
     #endregion
+
+
+    public GameObject earthMinimapPanel;
+    public EarthMinimap earthMinimap;
+    public GameObject SandStormOverlay;
+
+    public void ShowEarthMinimap(bool show)
+    {
+        Debug.Log("cc");
+        if (earthMinimapPanel != null)
+            earthMinimapPanel.SetActive(show);
+    }
+
+    public void ShowSandstormOverlay(bool statenow)
+    {
+        SandStormOverlay.SetActive(statenow);
+    }    
 }

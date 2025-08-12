@@ -548,6 +548,8 @@ GameObject:
   - component: {fileID: 3875451285399401487}
   - component: {fileID: 498415486874057420}
   - component: {fileID: 5798157418922223771}
+  - component: {fileID: 2809073495296482126}
+  - component: {fileID: 8775797698367690344}
   - component: {fileID: 5356251003208262356}
   - component: {fileID: 2580804265849034354}
   - component: {fileID: 5423870783282873954}
@@ -914,6 +916,52 @@ MonoBehaviour:
   - {fileID: 3996294800193357127}
   castPoint: {fileID: 7301926722250086930}
   arrowSpawnPoint: {fileID: 7301926722250086930}
+--- !u!114 &2809073495296482126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3996294800941443827}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 643e70a72abd33a4fbfeeefac879a65e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxSmokes: 3
+  smokeProjectileResourceName: SmokeProjectile
+  smokeAreaResourceName: EarthSmoke
+  smokePreviewMiniResourceName: SmokePreviewOnMiniMap
+  smokeDuration: 15
+  golemResourceName: EarthGolem
+  golemPreviewResourceName: EarthGolemOverview
+  golemLifetime: 60
+  golemDetectionRange: 15
+  golemFireRate: 1
+  golemProjectileResourceName: EarthProjectile
+  golemProjectileSpeed: 20
+  wallResourceName: EarthWall
+  wallPreviewResourceName: WallPreview
+  wallLifetime: 20
+  wallRotationStep: 45
+  sandstormResourceName: Sandstorm
+  sandstormGrowSpeed: 5
+  sandstormMaxRadius: 15
+  sandstormDuration: 10
+  sandstormSlowAmount: 0.5
+  navSampleMaxDistance: 3
+--- !u!114 &8775797698367690344
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3996294800941443827}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 813f2d257a635b34badd45aee9c67b43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &5356251003208262356
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -929,7 +977,7 @@ MonoBehaviour:
   windSkill: {fileID: -4872338300072026183}
   waterSkill: {fileID: 2942598249597597158}
   fireSkill: {fileID: 5798157418922223771}
-  earthSkill: {fileID: 0}
+  earthSkill: {fileID: 8775797698367690344}
 --- !u!120 &2580804265849034354
 LineRenderer:
   serializedVersion: 2
