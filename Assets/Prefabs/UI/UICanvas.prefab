@@ -436,6 +436,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6398638168525495481}
+  - {fileID: 3368222719103268299}
   - {fileID: 6999052345555879752}
   - {fileID: 1752117550092875511}
   - {fileID: 5592248088145051172}
@@ -450,7 +451,6 @@ RectTransform:
   - {fileID: 299066825556315711}
   - {fileID: 5511966105563425344}
   - {fileID: 737456689955762153}
-  - {fileID: 3368222719103268299}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -538,16 +538,24 @@ MonoBehaviour:
   DeathScreen: {fileID: 9031532779934351810}
   DeathText: {fileID: 3656617051319477376}
   HealthSlider: {fileID: 2115463085412957975}
+  ShieldSlider: {fileID: 0}
   KillsText: {fileID: 385009035816240454}
   DeathsLabel: {fileID: 351010464824127018}
   LeaderBoard: {fileID: 1974279143078483109}
   leaderBoardPlayerDisplay: {fileID: 984030840803046738}
   EndScreen: {fileID: 6961970170478279450}
   OptionsScreen: {fileID: 1209344292632192981}
-  dashUI: {fileID: 1524363443455220662}
-  smokeUI: {fileID: 5877500818666763303}
-  updraftUI: {fileID: 8623292549852115815}
+  skill1UI: {fileID: 0}
+  skill2UI: {fileID: 0}
+  skill3UI: {fileID: 0}
   ultimateUI: {fileID: 7345544552699412322}
+  ingameMoney: {fileID: 0}
+  WeaponUpgradePanel: {fileID: 0}
+  pickSkillPanel: {fileID: 0}
+  flashPanel: {fileID: 0}
+  earthMinimapPanel: {fileID: 0}
+  earthMinimap: {fileID: 0}
+  SandStormOverlay: {fileID: 0}
 --- !u!114 &8306475357083431577
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11747,17 +11755,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: db1a10fb2c58fec48a1cfa710e982ef4, type: 3}
---- !u!114 &1524363443455220662 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2500478851428648711, guid: db1a10fb2c58fec48a1cfa710e982ef4, type: 3}
-  m_PrefabInstance: {fileID: 4005068126821899441}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 232def12f019eaa4c9aa7e8342567101, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &7179061925018955999 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6068032003347590254, guid: db1a10fb2c58fec48a1cfa710e982ef4, type: 3}
@@ -12459,17 +12456,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6068032003347590254, guid: db1a10fb2c58fec48a1cfa710e982ef4, type: 3}
   m_PrefabInstance: {fileID: 6133738481517409376}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &8623292549852115815 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2500478851428648711, guid: db1a10fb2c58fec48a1cfa710e982ef4, type: 3}
-  m_PrefabInstance: {fileID: 6133738481517409376}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 232def12f019eaa4c9aa7e8342567101, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &6146583004117991672
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12710,14 +12696,3 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6068032003347590254, guid: db1a10fb2c58fec48a1cfa710e982ef4, type: 3}
   m_PrefabInstance: {fileID: 8296316191261799200}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &5877500818666763303 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2500478851428648711, guid: db1a10fb2c58fec48a1cfa710e982ef4, type: 3}
-  m_PrefabInstance: {fileID: 8296316191261799200}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 232def12f019eaa4c9aa7e8342567101, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

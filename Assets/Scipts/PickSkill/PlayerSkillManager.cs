@@ -26,7 +26,14 @@ public class PlayerSkillManager : MonoBehaviour
     void Start()
     {
         SetSKillFromStartThatPlayerChoose();
+        if(skillSwitchCount == 0)
+        {
+            UIController.instance.GP1.SetActive(true);
+            UIController.instance.GP2.SetActive(true);
+        }    
     }
+
+
 
     public void SetSKillFromStartThatPlayerChoose()
     {
@@ -47,6 +54,14 @@ public class PlayerSkillManager : MonoBehaviour
         if (skillSwitchCount >= maxSkillSwitches) return;
 
         skillSwitchCount++;
+        if(skillSwitchCount == 1)
+        {
+            UIController.instance.GP1.SetActive(false);
+        }
+        if (skillSwitchCount == 2)
+        {
+            UIController.instance.GP2.SetActive(false);
+        }
         currentElement = element;
 
         DisableAllSkills();

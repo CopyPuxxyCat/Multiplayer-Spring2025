@@ -47,6 +47,8 @@ public class UIController : MonoBehaviour
     public GameObject WeaponUpgradePanel;
     [SerializeField] private GameObject pickSkillPanel;
     [SerializeField] private GameObject flashPanel;
+    public GameObject GP1;
+    public GameObject GP2;
 
     #endregion
 

@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: 6bf5407d85f38d4478733357dd464e33, type: 3}
   cooldownDuration: 1
-  maxCharges: 100
+  maxCharges: 1
