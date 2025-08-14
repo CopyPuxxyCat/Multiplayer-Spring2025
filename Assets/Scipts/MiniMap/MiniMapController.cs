@@ -32,7 +32,6 @@ public class MiniMapController : MonoBehaviourPun
     {
         if (icons.TryGetValue(viewID, out MiniMapIcon icon))
         {
-            Debug.Log($"Setting icon for {viewID} to {visible}");
             icon.gameObject.SetActive(visible);
         }
         else

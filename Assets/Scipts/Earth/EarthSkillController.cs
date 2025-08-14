@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using Photon.Pun;
 using System.Collections;
+using System.Collections.Generic;
 
 public class EarthSkillController : MonoBehaviourPun, ISkillBlocker
 {
@@ -63,68 +64,81 @@ public class EarthSkillController : MonoBehaviourPun, ISkillBlocker
         }
     }
 
+    // … phần trên giữ nguyên …
+
     #region Smoke (minimap)
     void ToggleSmokePlacement()
     {
         isPlacingSmoke = !isPlacingSmoke;
-        // show/hide minimap panel (UIController must have ShowEarthMinimap)
+
         UIController.instance.ShowEarthMinimap(isPlacingSmoke);
 
-        // lock/unlock shooting
+        // chặn bắn & khoá input gameplay ở ngoài minimap
         playerController.CallCoroutineToggleCanShoot(!isPlacingSmoke, 0f);
-        GameInputManager.Instance.LockInput();
+        if (isPlacingSmoke) GameInputManager.Instance.LockInput();
+        else GameInputManager.Instance.UnlockInput();
 
-        // clear previous minimap preview icons when turning off
-        if (!isPlacingSmoke)
-        {
-            UIController.instance.earthMinimap.ClearPreviewIcons();
-            return;
-        }
+        // clear cũ
+        UIController.instance.earthMinimap.ClearPreviewIcons();
+        if (!isPlacingSmoke) return;
 
-        // while placing, player will interact with minimap (EarthMinimap handles clicks)
+        // bật cursor icon trên minimap
+        UIController.instance.earthMinimap.ShowCursor(true);
+
         StartCoroutine(SmokePlacementRoutine());
     }
 
     IEnumerator SmokePlacementRoutine()
     {
         yield return null;
-
         var mini = UIController.instance.earthMinimap;
-        // Danh sách worldPos các preview
-        var previewPositions = new System.Collections.Generic.List<Vector3>();
+        var pendingProjectiles = new System.Collections.Generic.List<EarthSmokeProjectile>();
+
+        // số điểm tối đa = min(3, remainingSmokes)
+        int maxPoints = Mathf.Min(3, remainingSmokes);
 
         while (isPlacingSmoke)
         {
-            // Chuột trái: thêm preview
-            if (Input.GetMouseButtonDown(0))
+            // TRÁI: đặt 1 điểm
+            if (Input.GetMouseButtonDown(0) && mini.IsPointerOverMinimap())
             {
-                Vector3 clicked = mini.GetLastClickedWorldPosition();
-                if (clicked != Vector3.zero && previewPositions.Count < 3)
+                if (pendingProjectiles.Count < maxPoints &&
+                    mini.TryGetCursorWorld(out Vector3 groundPos, 0f))
                 {
-                    previewPositions.Add(clicked);
-                    mini.SpawnPreviewIcon(clicked);
+                    // 1) tạo icon preview bám world
+                    mini.AddPreviewIcon(groundPos);
+
+                    // 2) spawn projectile treo trên trời tại vị trí "cùng phương" với camera minimap
+                    float dropStartY = mini.minimapCamera.transform.position.y; // ngang với cao độ camera minimap
+                    Vector3 spawn = new Vector3(groundPos.x, dropStartY, groundPos.z);
+
+                    var go = Photon.Pun.PhotonNetwork.Instantiate("Earth/" + stats.smokeProjectileResourceName, spawn, Quaternion.identity);
+                    var proj = go.GetComponent<EarthSmokeProjectile>();
+                    if (proj == null) proj = go.AddComponent<EarthSmokeProjectile>();
+                    // init: path smoke + thời gian + groundMask từ minimap
+                    proj.Init("Earth/" + stats.smokeAreaResourceName, stats.smokeDuration, mini.groundMask);
+
+                    pendingProjectiles.Add(proj);
                 }
             }
 
-            // Chuột phải: spawn tất cả smoke preview
-            if (Input.GetMouseButtonDown(1) && previewPositions.Count > 0)
+            // PHẢI: thả tất cả
+            if (Input.GetMouseButtonDown(1) && pendingProjectiles.Count > 0)
             {
-                foreach (var pos in previewPositions)
-                {
-                    PhotonNetwork.Instantiate(
-                        "Earth/" + stats.smokeProjectileResourceName,
-                        pos + Vector3.up * 40f,
-                        Quaternion.identity
-                    )
-                    .GetComponent<EarthSmokeProjectile>()
-                    .Init("Earth/" + stats.smokeAreaResourceName, stats.smokeDuration);
+                foreach (var p in pendingProjectiles)
+                    if (p != null) p.ArmAndDrop(5f); // rơi nhanh 1 chút
 
+                // tiêu hao UI usage theo số lượng
+                for (int i = 0; i < pendingProjectiles.Count; i++)
+                {
                     skill1UI.TriggerUse();
-                    remainingSmokes--;
+                    remainingSmokes = Mathf.Max(0, remainingSmokes - 1);
                 }
 
-                previewPositions.Clear();
+                // dọn & thoát
+                pendingProjectiles.Clear();
                 mini.ClearPreviewIcons();
+                mini.ShowCursor(false);
 
                 isPlacingSmoke = false;
                 UIController.instance.ShowEarthMinimap(false);
@@ -132,11 +146,22 @@ public class EarthSkillController : MonoBehaviourPun, ISkillBlocker
                 GameInputManager.Instance.UnlockInput();
             }
 
-            // Q để hủy
+            // Q: huỷ
             if (Input.GetKeyDown(KeyCode.Q))
             {
-                previewPositions.Clear();
+                // hủy toàn bộ projectile chưa thả
+                foreach (var p in pendingProjectiles)
+                {
+                    if (p != null && p.TryGetComponent<Photon.Pun.PhotonView>(out var pv) && pv.IsMine)
+                        Photon.Pun.PhotonNetwork.Destroy(p.gameObject);
+                    else if (p != null)
+                        Destroy(p.gameObject);
+                }
+                pendingProjectiles.Clear();
+
                 mini.ClearPreviewIcons();
+                mini.ShowCursor(false);
+
                 isPlacingSmoke = false;
                 UIController.instance.ShowEarthMinimap(false);
                 playerController.CallCoroutineToggleCanShoot(true, 0.5f);
@@ -146,9 +171,8 @@ public class EarthSkillController : MonoBehaviourPun, ISkillBlocker
             yield return null;
         }
     }
-
-
     #endregion
+
 
     #region Golem (game view, NavMesh sampling)
     void StartGolemPlacement()

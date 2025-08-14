@@ -191,7 +191,6 @@ public class UIController : MonoBehaviour
 
     public void ShowEarthMinimap(bool show)
     {
-        Debug.Log("cc");
         if (earthMinimapPanel != null)
             earthMinimapPanel.SetActive(show);
     }
