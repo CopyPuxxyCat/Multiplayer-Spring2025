@@ -62,7 +62,12 @@ public class UIController : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Escape))
+        if(ChatUIManager.Instance.isTyping)
+        {
+            return;
+        }    
+
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
             ShowHideOptions();
         }

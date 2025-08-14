@@ -43,7 +43,7 @@ public class FireSkillController : MonoBehaviourPun, ISkillBlocker
 
     void Update()
     {
-        if (!photonView.IsMine || !isSkillEnabled) return;
+        if (!photonView.IsMine || !isSkillEnabled || ChatUIManager.Instance.isTyping) return;
 
         if (isHoldingBall)
         {

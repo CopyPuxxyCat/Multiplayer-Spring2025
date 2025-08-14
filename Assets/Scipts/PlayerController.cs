@@ -114,7 +114,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
-        if (!photonView.IsMine || !GameInputManager.Instance.CanShoot())
+        if (!photonView.IsMine || !GameInputManager.Instance.CanShoot() || ChatUIManager.Instance.isTyping)
             return;
         /// If current player is owner than only update
         if (photonView.IsMine)

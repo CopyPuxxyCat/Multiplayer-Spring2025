@@ -71,9 +71,7 @@ public class JettController : MonoBehaviourPun, ISkillBlocker
 
     void Update()
     {
-        if (!photonView.IsMine) return;
-
-        if (!isSkillEnabled) return;
+        if (!photonView.IsMine || !isSkillEnabled || ChatUIManager.Instance.isTyping) return;
 
         CheckIsFalling();
 

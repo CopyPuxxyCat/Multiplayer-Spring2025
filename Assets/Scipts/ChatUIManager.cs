@@ -12,7 +12,7 @@ public class ChatUIManager : MonoBehaviour
     public GameObject messagePrefab;
 
     private bool isChatPanelOpen = false;
-    private bool isTyping = false;
+    public bool isTyping = false;
     private Coroutine autoCloseCoroutine;
 
     private void Awake()
