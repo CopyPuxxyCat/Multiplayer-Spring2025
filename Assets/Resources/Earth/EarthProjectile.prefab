@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 8573198300396448262, guid: de59d24da39360f4cae7dc9021b0e246, type: 3}
       propertyPath: m_Name
-      value: EarthProjectile Variant
+      value: EarthProjectile
       objectReference: {fileID: 0}
     - target: {fileID: 8807765160892684117, guid: de59d24da39360f4cae7dc9021b0e246, type: 3}
       propertyPath: m_IsTrigger

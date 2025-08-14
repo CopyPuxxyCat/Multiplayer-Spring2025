@@ -349,11 +349,23 @@ public class PlayerController : MonoBehaviourPunCallbacks
         if(Physics.Raycast(ray, out RaycastHit hit))
         {
             /// if we hit player
-            if(hit.collider.gameObject.tag.Equals("Player"))
+            if(hit.collider.CompareTag("Player"))
             {
                 //Debug.Log("Hit " + hit.collider.gameObject.GetPhotonView().Owner.NickName);
                 PhotonNetwork.Instantiate(PlayerHitImpact.name, hit.point, Quaternion.identity);
                 hit.collider.gameObject.GetPhotonView().RPC("DealDamage", RpcTarget.All, photonView.Owner.NickName, AllGuns[SelectedGun].currentDamage, PhotonNetwork.LocalPlayer.ActorNumber);
+            }
+            else if (hit.collider.CompareTag("Wall"))
+            {
+                float wallDamagePercent = 0.7f;
+                float dmg = AllGuns[SelectedGun].currentDamage * wallDamagePercent;
+
+                PhotonView wallView = hit.collider.GetComponentInParent<PhotonView>();
+                if (wallView != null)
+                {
+                    int cubeIndex = hit.collider.transform.GetSiblingIndex();
+                    wallView.RPC("ReceiveDamage", RpcTarget.All, cubeIndex, dmg);
+                }
             }
             else
             {

@@ -10,6 +10,7 @@ TagManager:
   - Skill
   - MinimapViewPoint
   - AI
+  - Wall
   layers:
   - Default
   - TransparentFX

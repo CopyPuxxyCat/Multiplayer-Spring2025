@@ -64,6 +64,8 @@ MonoBehaviour:
   - SpawnGolem
   - SpawnSandstorm
   - SpawnWall
+  - ReceiveDamage
+  - HideCube
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

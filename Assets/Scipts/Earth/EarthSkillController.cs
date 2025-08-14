@@ -179,7 +179,6 @@ public class EarthSkillController : MonoBehaviourPun, ISkillBlocker
     {
         if (isPlacingGolem) return;
         isPlacingGolem = true;
-        Debug.Log("check 2: " + isPlacingGolem);
         playerController.CallCoroutineToggleCanShoot(false, 0f);
 
         // local preview
@@ -255,7 +254,6 @@ public class EarthSkillController : MonoBehaviourPun, ISkillBlocker
 
         if (isPlacingWall) return;
         isPlacingWall = true;
-        Debug.Log("check 3: " + isPlacingWall);
         playerController.CallCoroutineToggleCanShoot(false, 0f);
 
         if (wallPreviewInstance == null)
@@ -301,7 +299,8 @@ public class EarthSkillController : MonoBehaviourPun, ISkillBlocker
                 {
                     Vector3 spawnPos = wallPreviewInstance.transform.position;
                     Quaternion spawnRot = wallPreviewInstance.transform.rotation;
-                    PhotonNetwork.Instantiate("Earth/" + stats.wallResourceName, spawnPos, spawnRot);
+                    GameObject wall = PhotonNetwork.Instantiate("Earth/" + stats.wallResourceName, spawnPos, spawnRot);
+                    wall.GetComponent<EarthWall>().Init(stats.wallLifetime);
                     skill2UI.TriggerUse();
                     Destroy(wallPreviewInstance);
                     wallPreviewInstance = null;

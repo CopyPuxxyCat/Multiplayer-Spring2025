@@ -14,7 +14,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 449568780224512539, guid: 379b698088dafd54ebcf0602a453eb90, type: 3}
       propertyPath: m_TagString
-      value: Building
+      value: Wall
       objectReference: {fileID: 0}
     - target: {fileID: 1804583028083015673, guid: 379b698088dafd54ebcf0602a453eb90, type: 3}
       propertyPath: m_LocalPosition.x
@@ -54,7 +54,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2455860057843000602, guid: 379b698088dafd54ebcf0602a453eb90, type: 3}
       propertyPath: m_TagString
-      value: Building
+      value: Wall
       objectReference: {fileID: 0}
     - target: {fileID: 2465999169676905997, guid: 379b698088dafd54ebcf0602a453eb90, type: 3}
       propertyPath: m_LocalScale.x
@@ -198,7 +198,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6867876547051614604, guid: 379b698088dafd54ebcf0602a453eb90, type: 3}
       propertyPath: m_TagString
-      value: Building
+      value: Wall
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -206,13 +206,13 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 4233673432146065409, guid: 379b698088dafd54ebcf0602a453eb90, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2494830999486919199}
+      addedObject: {fileID: 7230990843879101177}
     - targetCorrespondingSourceObject: {fileID: 4233673432146065409, guid: 379b698088dafd54ebcf0602a453eb90, type: 3}
       insertIndex: -1
-      addedObject: {fileID: -3318435485857042260}
+      addedObject: {fileID: 5659418940371305597}
     - targetCorrespondingSourceObject: {fileID: 4233673432146065409, guid: 379b698088dafd54ebcf0602a453eb90, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1616500588420587959}
+      addedObject: {fileID: 8979157528915954208}
     - targetCorrespondingSourceObject: {fileID: 6867876547051614604, guid: 379b698088dafd54ebcf0602a453eb90, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4417878348757361494}
@@ -247,14 +247,14 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.46372217, y: 0.43834597, z: 0.41348213}
+  m_Size: {x: 0.44, y: 0.38, z: 0.36}
   m_Center: {x: 0.0015684292, y: 0.0032577447, z: -0.0069029946}
 --- !u!1 &3245652155477727821 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4233673432146065409, guid: 379b698088dafd54ebcf0602a453eb90, type: 3}
   m_PrefabInstance: {fileID: 1714702670014980684}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2494830999486919199
+--- !u!114 &7230990843879101177
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -273,11 +273,11 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents:
-  - {fileID: -3318435485857042260}
+  - {fileID: 5659418940371305597}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &-3318435485857042260
+--- !u!114 &5659418940371305597
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -293,7 +293,7 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
---- !u!114 &1616500588420587959
+--- !u!114 &8979157528915954208
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -305,6 +305,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7673d66aa14736545b8f9004aa7b6224, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cubes: []
 --- !u!1 &3881873405810919254 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2455860057843000602, guid: 379b698088dafd54ebcf0602a453eb90, type: 3}
@@ -329,7 +330,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.46372217, y: 0.43834597, z: 0.41348213}
+  m_Size: {x: 0.44, y: 0.38, z: 0.36}
   m_Center: {x: 0.0015683398, y: 0.0032577447, z: -0.0069029946}
 --- !u!1 &5225373668902130624 stripped
 GameObject:
@@ -355,5 +356,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.46372217, y: 0.43834597, z: 0.41348213}
+  m_Size: {x: 0.44, y: 0.38, z: 0.36}
   m_Center: {x: 0.0015683994, y: 0.0032577447, z: -0.0069029946}
