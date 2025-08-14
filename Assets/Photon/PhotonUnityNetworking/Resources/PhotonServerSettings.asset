@@ -66,6 +66,10 @@ MonoBehaviour:
   - SpawnWall
   - ReceiveDamage
   - HideCube
+  - GolemReceiveDamage
+  - RPC_GolemShoot
+  - RPC_PlayAnim
+  - RPC_SetMaterial
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

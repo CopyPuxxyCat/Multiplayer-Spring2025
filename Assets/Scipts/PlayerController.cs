@@ -346,7 +346,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         ray.origin = cameraM.transform.position;
 
         /// get information of what the ray hit
-        if(Physics.Raycast(ray, out RaycastHit hit))
+        if(Physics.Raycast(ray, out RaycastHit hit, 500f, ~LayerMask.GetMask("GolemDetection")))
         {
             /// if we hit player
             if(hit.collider.CompareTag("Player"))
@@ -366,6 +366,13 @@ public class PlayerController : MonoBehaviourPunCallbacks
                     int cubeIndex = hit.collider.transform.GetSiblingIndex();
                     wallView.RPC("ReceiveDamage", RpcTarget.All, cubeIndex, dmg);
                 }
+            }
+            else if (hit.collider.CompareTag("Golem"))
+            {
+                float dmg = AllGuns[SelectedGun].currentDamage;
+                GolemHitbox hitbox = hit.collider.GetComponent<GolemHitbox>();
+                if (hitbox != null)
+                    hitbox.ReceiveDamage(dmg);
             }
             else
             {
