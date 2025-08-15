@@ -1831,7 +1831,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.05490196}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3887,7 +3887,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &731314844
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7262,10 +7262,10 @@ MonoBehaviour:
   playerNameText: {fileID: 1285942679}
   elementDropdown: {fileID: 1250261138}
   elementSprites:
-  - {fileID: 21300000, guid: e27620d04a3c3d044a8cb9d28601883d, type: 3}
-  - {fileID: 21300000, guid: f6f2601ce07ed3d4eaafbc04b1d2c0ff, type: 3}
-  - {fileID: 21300000, guid: efd943ee663153241ad31273b5c40baa, type: 3}
-  - {fileID: 21300000, guid: 75454dc7877105a49b2a2d169acf56ca, type: 3}
+  - {fileID: 21300000, guid: 7cdbf5cac0eeb6640a9c78ae9b347c2b, type: 3}
+  - {fileID: 21300000, guid: 275c052ac3475494298d07b11ed6e06f, type: 3}
+  - {fileID: 21300000, guid: 0c16f02358cb2c74ca2b9ffa6134955e, type: 3}
+  - {fileID: 21300000, guid: 985f5904c86f8404cab9195bf2c8c5ea, type: 3}
 --- !u!1 &1309680946
 GameObject:
   m_ObjectHideFlags: 0
