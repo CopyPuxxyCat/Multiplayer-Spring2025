@@ -439,9 +439,9 @@ RectTransform:
   - {fileID: 3368222719103268299}
   - {fileID: 6999052345555879752}
   - {fileID: 1752117550092875511}
+  - {fileID: 3045080244400443701}
   - {fileID: 5592248088145051172}
   - {fileID: 3922722846261864591}
-  - {fileID: 3045080244400443701}
   - {fileID: 4548336545802129845}
   - {fileID: 7116013752131407870}
   - {fileID: 8756104715277064731}
@@ -553,6 +553,8 @@ MonoBehaviour:
   WeaponUpgradePanel: {fileID: 0}
   pickSkillPanel: {fileID: 0}
   flashPanel: {fileID: 0}
+  GP1: {fileID: 0}
+  GP2: {fileID: 0}
   earthMinimapPanel: {fileID: 0}
   earthMinimap: {fileID: 0}
   SandStormOverlay: {fileID: 0}

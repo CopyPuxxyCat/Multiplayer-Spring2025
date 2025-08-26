@@ -21471,6 +21471,7 @@ MonoBehaviour:
   chatInputField: {fileID: 1989859588}
   messageContent: {fileID: 4575094}
   messagePrefab: {fileID: 1101991054783235456, guid: 55c2b08a8c71e5643a091fe18e86a743, type: 3}
+  isTyping: 0
 --- !u!114 &7492920827695340205
 MonoBehaviour:
   m_ObjectHideFlags: 0

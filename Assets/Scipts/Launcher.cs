@@ -5,6 +5,8 @@ using Photon.Pun;
 using TMPro;
 using Photon.Realtime;
 using Unity.VisualScripting;
+using System.Text.RegularExpressions;
+using UnityEngine.UI;
 
 public class Launcher : MonoBehaviourPunCallbacks
 {
@@ -27,9 +29,25 @@ public class Launcher : MonoBehaviourPunCallbacks
     public string LevelToPlay;
     public GameObject StartButton;
     public GameObject RoomTestButton;
-    public static bool HasSetNickName;
+    public bool HasSetNickName;
     public string[] AllMaps;
     public bool ChangeMapBetweenRounds = true;
+
+    public Color validColor = Color.green;
+    public Color errorColor = Color.red;
+    public Color emptyColor = Color.white;
+
+    [Header("Google PlayFab UI")]
+    public GameObject SignUpPanel;
+    public GameObject LoginPanel;
+    public TMP_InputField RegisterGmail;
+    public TMP_InputField RegisterPassword;
+    public TMP_InputField RegisterPasswordAgain;
+    public TMP_InputField RegisterPlayerName;
+    public TMP_InputField LoginGmail;
+    public TMP_InputField LoginPassword;
+    public TMP_InputField ForgotPasswordEmailField;
+    public GameObject PasswordRecoverPanel;
 
     #endregion
 
@@ -132,6 +150,9 @@ public class Launcher : MonoBehaviourPunCallbacks
         ErrorScreen.SetActive(false);
         RoomBrowserScreen.SetActive(false);
         NameInputScreen.SetActive(false);
+        LoginPanel.SetActive(false);
+        SignUpPanel.SetActive(false);
+        PasswordRecoverPanel.SetActive(false);
     }
 
     /// <summary>
@@ -325,6 +346,12 @@ public class Launcher : MonoBehaviourPunCallbacks
     /// </summary>
     public void SetNickName()
     {
+        if(PlayFabLogin.instance == null)
+        {
+            Debug.Log("chua co playfablogin");
+
+        }
+            
         if(!string.IsNullOrEmpty(NameInputText.text))
         {
             PhotonNetwork.NickName = NameInputText.text;
@@ -332,12 +359,144 @@ public class Launcher : MonoBehaviourPunCallbacks
             /// use playerprefs for storing nick name to avoid new name everytime game runs
             PlayerPrefs.SetString("PlayerName", NameInputText.text);
 
+            PlayFabLogin.instance.PlayAsGuest(NameInputText.text);
             CloseMenus();
             MenuButtons.SetActive(true);
             HasSetNickName = true;
         }
     }
+
+    /// <summary>
+    /// google sign up
+    /// </summary>
+    public void SignUpForGoogle()
+    {
+        OpenThisPanel(SignUpPanel);
+
+        bool valid = true;
+
+        string email = RegisterGmail.text.Trim();
+        string password = RegisterPassword.text.Trim();
+        string passwordAgain = RegisterPasswordAgain.text.Trim();
+        string playerName = RegisterPlayerName.text.Trim();
+
+        // Reset error UI
+        ResetField(RegisterGmail);
+        ResetField(RegisterPassword);
+        ResetField(RegisterPasswordAgain);
+        ResetField(RegisterPlayerName);
+
+        // Check email
+        if (string.IsNullOrEmpty(email) || !IsValidGmail(email))
+        {
+            ShowError(RegisterGmail, "* Email không hợp lệ, phải là Gmail.");
+            valid = false;
+        }
+        else MarkValid(RegisterGmail);
+
+        // Check password
+        if (string.IsNullOrEmpty(password) || !IsValidPassword(password))
+        {
+            ShowError(RegisterPassword, "* Mật khẩu phải ≥8 ký tự, có số, có chữ, bắt đầu bằng chữ Hoa.");
+            valid = false;
+        }
+        else MarkValid(RegisterPassword);
+
+        // Check repeat password
+        if (password != passwordAgain)
+        {
+            ShowError(RegisterPasswordAgain, "* Mật khẩu nhập lại không khớp.");
+            valid = false;
+        }
+        else MarkValid(RegisterPasswordAgain);
+
+        // Check player name
+        if (string.IsNullOrEmpty(playerName) || playerName.Contains(" "))
+        {
+            ShowError(RegisterPlayerName, "* Tên không được để trống hoặc chứa khoảng trắng.");
+            valid = false;
+        }
+        else MarkValid(RegisterPlayerName);
+
+        if (!valid) return;
+
+        PlayFabLogin.instance.RegisterWithEmail(email, password, playerName);
+    }
         
+
+    /// <summary>
+    /// google sign in
+    /// </summary>
+    public void GoogleLogin()
+    {
+        OpenThisPanel(LoginPanel);
+
+        bool valid = true;
+
+        string email = LoginGmail.text.Trim();
+        string password = LoginPassword.text.Trim();
+
+        ResetField(LoginGmail);
+        ResetField(LoginPassword);
+
+        // Check email
+        if (string.IsNullOrEmpty(email) || !IsValidGmail(email))
+        {
+            ShowError(LoginGmail, "* Email không hợp lệ, phải là Gmail.");
+            valid = false;
+        }
+        else MarkValid(LoginGmail);
+
+        // Check password
+        if (string.IsNullOrEmpty(password))
+        {
+            ShowError(LoginPassword, "* Mật khẩu không được để trống.");
+            valid = false;
+        }
+        else MarkValid(LoginPassword);
+
+        if (!valid) return;
+
+        PlayFabLogin.instance.LoginWithEmail(email, password);
+    }
+
+    public void OnClickForgotPassword()
+    {
+        
+        string email = ForgotPasswordEmailField.text.Trim();
+
+        ResetField(ForgotPasswordEmailField);
+
+        // Check input
+        if (string.IsNullOrEmpty(email))
+        {
+            ShowError(ForgotPasswordEmailField, "* Vui lòng nhập Gmail.");
+            return;
+        }
+        if (!IsValidGmail(email))
+        {
+            ShowError(ForgotPasswordEmailField, "* Email không hợp lệ, phải là @gmail.com.");
+            return;
+        }
+
+        // Gọi PlayFab
+        PlayFabLogin.instance.ForgotPassword(email,
+            () =>
+            {
+                MarkValid(ForgotPasswordEmailField);
+                Debug.Log("Vui lòng kiểm tra email để đặt lại mật khẩu.");
+            },
+            (errMsg) =>
+            {
+                ShowError(ForgotPasswordEmailField, "* Không tìm thấy email trong hệ thống.");
+            });
+    }
+
+    public void OpenThisPanel(GameObject panelOBJ)
+    {
+        CloseMenus();
+        panelOBJ.SetActive(true);
+    }    
     /// </summary>
 
     /// <summary>
@@ -402,5 +561,60 @@ public class Launcher : MonoBehaviourPunCallbacks
 
         AllPlayerNames.Add(entryUI.playerNameText);
     }
+
+    private bool IsValidGmail(string email)
+    {
+        return Regex.IsMatch(email, @"^[a-zA-Z0-9._%+-]+@gmail\.com$");
+    }
+
+    private bool IsValidPassword(string password)
+    {
+        // ≥8 ký tự, chứa số, chữ, bắt đầu bằng chữ Hoa
+        return Regex.IsMatch(password, @"^[A-Z][A-Za-z0-9]{7,}$") &&
+               Regex.IsMatch(password, @"\d") && // ít nhất 1 số
+               Regex.IsMatch(password, @"[A-Za-z]"); // ít nhất 1 chữ
+    }
+
+    public void ShowError(TMP_InputField field, string message)
+    {
+        field.image.color = errorColor;
+
+        // Tạo 1 error text nếu chưa có
+        TMP_Text errorText = field.transform.Find("ErrorText")?.GetComponent<TMP_Text>();
+        if (errorText == null)
+        {
+            GameObject errObj = new GameObject("ErrorText", typeof(RectTransform));
+            errObj.transform.SetParent(field.transform);
+            errObj.transform.localScale = Vector3.one;
+
+            errorText = errObj.AddComponent<TextMeshProUGUI>();
+            errorText.fontSize = 20;
+            errorText.color = Color.red;
+
+            RectTransform rt = errObj.GetComponent<RectTransform>();
+            rt.anchorMin = new Vector2(0, 0);
+            rt.anchorMax = new Vector2(1, 0);
+            rt.pivot = new Vector2(0.5f, 1);
+            rt.anchoredPosition = new Vector2(0, -20);
+            rt.sizeDelta = new Vector2(0, 25);
+        }
+
+        errorText.text = message;
+    }
+
+    private void ResetField(TMP_InputField field)
+    {
+        field.image.color = emptyColor;
+        var err = field.transform.Find("ErrorText");
+        if (err != null) Destroy(err.gameObject);
+    }
+
+    private void MarkValid(TMP_InputField field)
+    {
+        field.image.color = validColor;
+        var err = field.transform.Find("ErrorText");
+        if (err != null) Destroy(err.gameObject);
+    }
+
     #endregion
 }
