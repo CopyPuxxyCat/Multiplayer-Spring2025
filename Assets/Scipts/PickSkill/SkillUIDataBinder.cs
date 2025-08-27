@@ -27,6 +27,23 @@ public class SkillUIDataBinder : MonoBehaviour
     private PlayerSkillManager playerSkillManager;
     private PlayerSkillManager.ElementType lastElementType;
 
+    void Awake()
+    {
+        PlayerSkillManager.OnLocalPlayerReady += BindToLocalPlayer;
+    }
+
+    private void BindToLocalPlayer(PlayerSkillManager mgr)
+    {
+        playerSkillManager = mgr;
+        lastElementType = playerSkillManager.GetCurrentElement();
+        ApplySkillUI(lastElementType);
+    }
+
+    void OnDestroy()
+    {
+        PlayerSkillManager.OnLocalPlayerReady -= BindToLocalPlayer;
+    }
+
     void Start()
     {
         playerSkillManager = FindObjectOfType<PlayerSkillManager>();
@@ -64,7 +81,6 @@ public class SkillUIDataBinder : MonoBehaviour
             Debug.LogWarning($"[SkillUIDataBinder] Không có data cho element: {elementType}");
             return;
         }
-
         skill1UI.SetData(set.Skill1);
         skill2UI.SetData(set.Skill2);
         skill3UI.SetData(set.Skill3);
