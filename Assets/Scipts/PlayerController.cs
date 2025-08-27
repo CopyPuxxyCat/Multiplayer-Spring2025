@@ -483,7 +483,13 @@ public class PlayerController : MonoBehaviourPunCallbacks
         Debug.Log($"💰 Đã cộng 500 coin cho {PhotonNetwork.NickName}");
     }
 
+    [Header ("camera for wall")]
+    [SerializeField] private float defaultDistance = 0f; // khoảng cách mặc định
+    [SerializeField] private float smoothSpeed = 10f;   // tốc độ mượt
+    [SerializeField] private float sphereCameraRadius = 0.3f;
+    [SerializeField] private LayerMask collisionCameraMask;   // layer tường/vật cản
 
+    private float currentDistance;
 
     private void LateUpdate()
     {
@@ -492,8 +498,9 @@ public class PlayerController : MonoBehaviourPunCallbacks
         {
             if(MatchManager.instance.State == MatchManager.GameState.Playing)
             {
-                cameraM.transform.position = ViewPoint.position;
-                cameraM.transform.rotation = ViewPoint.rotation;
+                /*cameraM.transform.position = ViewPoint.position;
+                cameraM.transform.rotation = ViewPoint.rotation;*/
+                HandleCameraCollision();
             }
             else
             {
@@ -502,6 +509,28 @@ public class PlayerController : MonoBehaviourPunCallbacks
             }
         }
     }
+
+    private void HandleCameraCollision()
+    {
+        Vector3 desiredPos = ViewPoint.position - ViewPoint.forward * defaultDistance;
+        Vector3 direction = desiredPos - ViewPoint.position;
+
+        if (Physics.SphereCast(ViewPoint.position, sphereCameraRadius, direction.normalized, out RaycastHit hit, defaultDistance, collisionCameraMask))
+        {
+            currentDistance = hit.distance - sphereCameraRadius;
+            if (currentDistance < 0.5f) currentDistance = 0.5f; // tránh dí sát player quá
+        }
+        else
+        {
+            currentDistance = defaultDistance;
+        }
+
+        Vector3 finalPos = ViewPoint.position - ViewPoint.forward * currentDistance;
+
+        cameraM.transform.position = Vector3.Lerp(cameraM.transform.position, finalPos, Time.deltaTime * smoothSpeed);
+        cameraM.transform.rotation = ViewPoint.rotation;
+    }
+
 
     private IEnumerator WaitForPlayerAndInit()
     {

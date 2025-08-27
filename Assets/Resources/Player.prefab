@@ -695,6 +695,12 @@ MonoBehaviour:
   FootStepSlow: {fileID: 3996388690385327860}
   FootStepFast: {fileID: 5069774941150142454}
   expectedGunCount: 3
+  defaultDistance: 0
+  smoothSpeed: 65
+  sphereCameraRadius: 0.3
+  collisionCameraMask:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!143 &3996294800941443785
 CharacterController:
   m_ObjectHideFlags: 0

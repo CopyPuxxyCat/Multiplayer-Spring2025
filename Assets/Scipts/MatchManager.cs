@@ -67,8 +67,7 @@ public class MatchManager : MonoBehaviourPunCallbacks, IOnEventCallback
             }
             else
             {
-                preGameSelectedElement = PlayerSkillManager.ElementType.Wind; // fallback
-                Debug.LogWarning("No selected element found in CustomProperties! Defaulting to Wind.");
+                preGameSelectedElement = PlayerSkillManager.ElementType.Wind;
             }
             State = GameState.Playing;
         }

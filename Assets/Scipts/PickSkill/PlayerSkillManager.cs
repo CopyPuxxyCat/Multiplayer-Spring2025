@@ -26,13 +26,7 @@ public class PlayerSkillManager : MonoBehaviour
 
     void Awake()
     {
-/*        pv = GetComponent<PhotonView>();
 
-        // Chỉ set singleton nếu là thằng local
-        if (pv.IsMine)
-        {
-            Instance = this;
-        }*/
     }
 
     void Start()
@@ -60,16 +54,9 @@ public class PlayerSkillManager : MonoBehaviour
     public void SetSKillFromStartThatPlayerChoose()
     {
         if (!pv.IsMine) return;
-        Debug.Log(
-        $"[PlayerSkillManager] SetSKillFromStartThatPlayerChoose() chạy trên gameObject={gameObject.name}, " +
-        $"Owner={(GetComponent<PhotonView>()?.Owner?.NickName ?? "None")}, " +
-        $"ActorNumber={(GetComponent<PhotonView>()?.OwnerActorNr.ToString() ?? "None")}\n" +
-        $"StackTrace:\n{System.Environment.StackTrace}"
-    );
         ElementType element = MatchManager.instance.preGameSelectedElement;
         currentElement = element;
 
-        Debug.Log("curent element: " + currentElement);
         DisableAllSkills();
         GetSkillComponent(element).GetType().GetProperty("isSkillEnabled")?.SetValue(GetSkillComponent(element), true);
         FindObjectOfType<SkillUIDataBinder>()?.ForceUpdateUI(currentElement);
