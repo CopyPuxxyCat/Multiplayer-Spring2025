@@ -310,7 +310,7 @@ public class JettController : MonoBehaviourPun, ISkillBlocker
     #endregion
 
     #region Helper
-    public void AssignSkillUI(SkillUIEntry dash, SkillUIEntry smoke, SkillUIEntry up, SkillUIEntry ult)
+    public void AssignSkillUI(SkillUIEntry up, SkillUIEntry dash, SkillUIEntry smoke, SkillUIEntry ult)
     {
         dashUI = dash;
         smokeUI = smoke;

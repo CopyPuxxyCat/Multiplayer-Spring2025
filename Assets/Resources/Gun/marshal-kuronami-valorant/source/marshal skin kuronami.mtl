@@ -1,0 +1,82 @@
+# Blender 4.4.3 MTL File: 'None'
+# www.blender.org
+
+newmtl 1P_Ninja_Decals_MI
+Ns 360.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl AK_Ninja_Shuriken_MI
+Ns 360.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl LeverSniper_Ninja_Liquid_MI
+Ns 360.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl LeverSniper_Ninja_MI
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd G:/Assets/ShooterGame/Content/Equippables/Guns/SniperRifles/Leversniper/Ninja/Materials/LeverSniper_Ninja_DF.png
+
+newmtl LeverSniper_Ninja_Scope_Glass_MI
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd G:/Assets/ShooterGame/Content/Equippables/Guns/SniperRifles/Leversniper/Ninja/Attachments/Scope/Materials/LeverSniper_Ninja_Scope_Glass_DF.png
+
+newmtl LeverSniper_Ninja_Scope_MI
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd G:/Assets/ShooterGame/Content/Equippables/Guns/SniperRifles/Leversniper/Ninja/Attachments/Scope/Materials/LeverSniper_Ninja_Scope_DF.png
+
+newmtl LeverSniper_Ninja_Scope_Water_MI
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd G:/Assets/ShooterGame/Content/Equippables/Guns/SniperRifles/Leversniper/Ninja/Attachments/Scope/Materials/LeverSniper_Ninja_Scope_Glass_DF.png
+
+newmtl LeverSniper_Ninja_Water_MI
+Ns 360.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
