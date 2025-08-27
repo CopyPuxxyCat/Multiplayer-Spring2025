@@ -30,8 +30,12 @@ public class MiniMapIcon : MonoBehaviour
 
     private void Update()
     {
-
-        if (target == null || mapCenter == null) return;
+        if (target == null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        if (mapCenter == null) return;
         // Tính offset giữa target và mapCenter (tức player local)
         Vector3 offset = target.position - mapCenter.position;
 

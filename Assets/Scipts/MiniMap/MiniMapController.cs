@@ -26,6 +26,21 @@ public class MiniMapController : MonoBehaviourPun
             // Dịch chuyển minimap theo player
             transform.position = new Vector3(mapFollowTarget.position.x, transform.position.y, mapFollowTarget.position.z);
         }
+
+        List<int> toRemove = new();
+        foreach (var kvp in icons)
+        {
+            if (kvp.Value == null || kvp.Value.target == null)
+            {
+                if (kvp.Value != null)
+                    Destroy(kvp.Value.gameObject);
+                toRemove.Add(kvp.Key);
+            }
+        }
+        foreach (int id in toRemove)
+        {
+            icons.Remove(id);
+        }
     }
 
     public void SetIconVisibility(int viewID, bool visible)
@@ -55,5 +70,14 @@ public class MiniMapController : MonoBehaviourPun
         icon.Init(player.transform, isSelf, mapFollowTarget);
 
         icons[pv.ViewID] = icon;
+    }
+
+    public void UnregisterPlayer(int viewID)
+    {
+        if (icons.TryGetValue(viewID, out MiniMapIcon icon))
+        {
+            Destroy(icon.gameObject);
+            icons.Remove(viewID);
+        }
     }
 }
