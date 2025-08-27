@@ -7,6 +7,7 @@ using Photon.Realtime;
 using Unity.VisualScripting;
 using System.Text.RegularExpressions;
 using UnityEngine.UI;
+using PlayFab;
 
 public class Launcher : MonoBehaviourPunCallbacks
 {
@@ -153,6 +154,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         LoginPanel.SetActive(false);
         SignUpPanel.SetActive(false);
         PasswordRecoverPanel.SetActive(false);
+        HistoryPanel.SetActive(false);
     }
 
     /// <summary>
@@ -360,8 +362,6 @@ public class Launcher : MonoBehaviourPunCallbacks
             PlayerPrefs.SetString("PlayerName", NameInputText.text);
 
             PlayFabLogin.instance.PlayAsGuest(NameInputText.text);
-            CloseMenus();
-            MenuButtons.SetActive(true);
             HasSetNickName = true;
         }
     }
@@ -547,6 +547,59 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         Application.Quit();
     }
+
+    /// <summary>
+    /// History panel
+    /// </summary>
+
+    [Header("History UI")]
+    public GameObject HistoryPanel;
+    public Transform HistoryContent;
+    public GameObject HistoryItemPrefab;
+
+    public void OpenHistoryPanel()
+    {
+        CloseMenus();
+        HistoryPanel.SetActive(true);
+
+        // Xóa cũ
+        foreach (Transform child in HistoryContent)
+            Destroy(child.gameObject);
+
+        // Lấy dữ liệu từ PlayFab
+        PlayFabClientAPI.GetUserData(new PlayFab.ClientModels.GetUserDataRequest(),
+            result =>
+            {
+                foreach (var record in result.Data)
+                {
+                    var entry = JsonUtility.FromJson<HistoryEntry>(record.Value.Value);
+
+                    GameObject go = Instantiate(HistoryItemPrefab, HistoryContent);
+                    var texts = go.GetComponentsInChildren<TMPro.TMP_Text>();
+                    texts[0].text = entry.Time;
+                    texts[1].text = $"Kills: {entry.Kills} | Deaths: {entry.Deaths}";
+                    texts[2].text = entry.Result;
+
+                    // Đổi màu theo kết quả
+                    var img = go.GetComponent<UnityEngine.UI.Image>();
+                    img.color = entry.Result == "Win" ? Color.green : Color.red;
+                }
+            },
+            error =>
+            {
+                Debug.LogError("Load history failed: " + error.GenerateErrorReport());
+            });
+    }
+
+    [System.Serializable]
+    public class HistoryEntry
+    {
+        public string Time;
+        public string Kills;
+        public string Deaths;
+        public string Result;
+    }
+
 
     #endregion
 

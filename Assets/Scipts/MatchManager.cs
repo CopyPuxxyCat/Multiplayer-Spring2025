@@ -5,6 +5,7 @@ using Photon.Pun;
 using UnityEngine.SceneManagement;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
+using PlayFab;
 
 public class MatchManager : MonoBehaviourPunCallbacks, IOnEventCallback
 {
@@ -396,6 +397,10 @@ public class MatchManager : MonoBehaviourPunCallbacks, IOnEventCallback
         Camera.main.transform.position = MapCamPoint.position;
         Camera.main.transform.rotation = MapCamPoint.rotation;
 
+        var local = AllPlayers.Find(p => p.actor == PhotonNetwork.LocalPlayer.ActorNumber);
+        bool isWinner = local.kills >= KillsToWin;
+        SaveMatchHistory(local, isWinner);
+
         StartCoroutine(EndGameCoroutine());
     }
 
@@ -457,6 +462,41 @@ public class MatchManager : MonoBehaviourPunCallbacks, IOnEventCallback
         UpdateStatsToDisplay();
         PlayerSpawner.instance.SpawnPlayer();
     }
+
+    private void SaveMatchHistory(PlayerInfo player, bool isWin)
+    {
+        var historyEntry = new HistoryEntry
+        {
+            Time = System.DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"),
+            Kills = player.kills.ToString(),
+            Deaths = player.death.ToString(),
+            Result = isWin ? "Win" : "Lose"
+        };
+
+        // Key riêng cho mỗi player
+        string key = $"Match_{System.Guid.NewGuid()}";
+
+        // Lưu data vào PlayFab UserData (dữ liệu cá nhân của người chơi đó)
+        PlayFabClientAPI.UpdateUserData(new PlayFab.ClientModels.UpdateUserDataRequest
+        {
+            Data = new Dictionary<string, string>
+        {
+            { key, JsonUtility.ToJson(historyEntry) }
+        }
+        },
+        result => Debug.Log($"Saved match history for {player.name}"),
+        error => Debug.LogError("Save match history failed: " + error.GenerateErrorReport()));
+    }
+
+    [System.Serializable]
+    public class HistoryEntry
+    {
+        public string Time;
+        public string Kills;
+        public string Deaths;
+        public string Result;
+    }
+
 
     #endregion
 

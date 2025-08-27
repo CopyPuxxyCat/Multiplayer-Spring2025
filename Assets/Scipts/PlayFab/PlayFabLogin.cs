@@ -65,6 +65,8 @@ public class PlayFabLogin : MonoBehaviour
                     displayNameResult => Debug.Log("Display name set to: " + displayNameResult.DisplayName),
                     error => Debug.LogError(error.GenerateErrorReport())
                 );
+
+                Launcher.Instance.OpenThisPanel(Launcher.Instance.MenuButtons);
             },
             error => Debug.LogError("Guest login failed: " + error.GenerateErrorReport())
         );
