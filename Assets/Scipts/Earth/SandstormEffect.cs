@@ -44,6 +44,7 @@ public class SandstormEffect : MonoBehaviourPun
         lifeTimer += Time.deltaTime;
         if (lifeTimer >= duration && photonView.IsMine)
         {
+            StartCoroutine(DisableSandStormOverlay(0f));
             PhotonNetwork.Destroy(gameObject);
         }
     }
@@ -63,7 +64,7 @@ public class SandstormEffect : MonoBehaviourPun
         if (pc.photonView.IsMine)
         {
             UIController.instance.ShowSandstormOverlay(true);
-            StartCoroutine(DisableSandStormOverlay(5f));
+            StartCoroutine(DisableSandStormOverlay(9.5f));
         }
     }
 
@@ -82,6 +83,7 @@ public class SandstormEffect : MonoBehaviourPun
         if (pc.photonView.IsMine)
         {
             UIController.instance.ShowSandstormOverlay(false);
+            StartCoroutine(DisableSandStormOverlay(0.5f));
         }
     }
 

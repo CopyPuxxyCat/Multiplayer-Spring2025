@@ -606,7 +606,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     /// </summary>
     public void SwitchGun()
     {
-        foreach(Gun gun in AllGuns)
+        foreach (Gun gun in AllGuns)
         {
             gun.gameObject.SetActive(false);
         }
@@ -615,13 +615,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         WeaponUpgradeManager.Instance.Init(AllGuns);
 
         AllGuns[SelectedGun].MuzzleFlash.SetActive(false);
-    }
-
-    IEnumerator DelaySwitchGun()
-    {
-        float delayTime = 0.5f;
-        yield return new WaitForSeconds(delayTime);
-    }    
+    }   
 
     /// <summary>
     /// Set gun for all characters to be visible
@@ -633,7 +627,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         if(GunToSwitchTo < AllGuns.Length)
         {
             SelectedGun = GunToSwitchTo;
-            StartCoroutine(DelaySwitchGun());
+            
             SwitchGun();
         }
     }

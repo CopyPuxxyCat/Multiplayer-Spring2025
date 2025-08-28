@@ -136,20 +136,20 @@ public class EarthGolem : MonoBehaviourPun
     bool CanSeeTarget(Transform target)
     {
         Vector3 start = eyePoint.position;
-        Vector3 end = target.position + Vector3.up * 1f;
+        Vector3 end = target.position + Vector3.up * 1.4f;
         Vector3 dir = (end - start).normalized;
         float dist = Vector3.Distance(start, end);
 
-        if (Physics.Raycast(start, dir, out RaycastHit hit, dist, visibleLayers))
+        if (Physics.Linecast(start, end, out RaycastHit hit, visibleLayers, QueryTriggerInteraction.Ignore))
         {
             if (hit.collider.GetComponent<PlayerController>() != null)
             {
-                Debug.DrawLine(start, hit.point, Color.red);
+                Debug.DrawLine(start, end, Color.green);
                 return true;
             }
             else
             {
-                Debug.DrawLine(start, hit.point, Color.white);
+                Debug.DrawLine(start, hit.point, Color.yellow);
             }
         }
         return false;

@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 5278760830908841624}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.255, y: 1.05, z: 1.04}
+  m_LocalPosition: {x: 0.255, y: 0.879, z: 1.04}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 6235966181819698449}
   - component: {fileID: 5848397757458061879}
   - component: {fileID: 2479498252381410237}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: EarthGolem
   m_TagString: AI
   m_Icon: {fileID: 0}
@@ -163,7 +163,7 @@ Transform:
   m_GameObject: {fileID: 6612401760468181654}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.432, z: 0.353}
+  m_LocalPosition: {x: 0.018, y: 0.914, z: 0.434}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

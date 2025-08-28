@@ -28,11 +28,16 @@ public class FireSkillController : MonoBehaviourPun, ISkillBlocker
     private bool isMolotovMode;
     private int arrowCount;
 
+    private void Awake()
+    {
+        fireStats = GetComponent<FireStats>();
+    }
+
     void Start()
     {
         if (!photonView.IsMine) return;
 
-        fireStats = GetComponent<FireStats>();
+        
         playerController = GetComponent<PlayerController>();
         cam = Camera.main;
         isSkillEnabled = false;
@@ -145,7 +150,22 @@ public class FireSkillController : MonoBehaviourPun, ISkillBlocker
         skill2UI.TriggerUse();
         buffEffect.SetActive(true);
         GetComponent<FireBuffUtil>().RunBuff(fireStats.buffDuration, fireStats.buffSpeedMultiplier);
-        StartCoroutine(StopBuffEffectAfter(fireStats.buffDuration));
+        photonView.RPC("PlayBuffEffect", RpcTarget.All);
+    }
+
+    [PunRPC]
+    public void PlayBuffEffect()
+    {
+        if (buffEffect == null || fireStats == null) return;
+        StartCoroutine(PlayEffectRoutine(buffEffect, fireStats.buffDuration));
+    }
+
+    IEnumerator PlayEffectRoutine(GameObject obj, float duration)
+    {
+        if (obj == null) yield break;
+        obj.SetActive(true);
+        yield return new WaitForSeconds(duration);
+        obj.SetActive(false);
     }
 
     IEnumerator StopBuffEffectAfter(float time)

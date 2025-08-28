@@ -70,6 +70,12 @@ MonoBehaviour:
   - RPC_GolemShoot
   - RPC_PlayAnim
   - RPC_SetMaterial
+  - PlayDashEffect
+  - PlayUltimateEffect
+  - PlayUpdraftEffect
+  - PlayBuffEffect
+  - PlayJetUltimateEffect
+  - PlayUpdrafEffect
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

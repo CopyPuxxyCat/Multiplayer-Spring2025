@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: WaterRing
-  m_Shader: {fileID: 4800000, guid: 033d9896e2613004ea267bfd879a2ec5, type: 3}
+  m_Name: WaterTrail
+  m_Shader: {fileID: 4800000, guid: 3e16ac3bc9e355b40a57568987ba11ef, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -44,7 +44,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 899607b97b98995469389c5c82d840b4, type: 3}
+        m_Texture: {fileID: 2800000, guid: fbb03c00c2641b543a4e04e31919564a, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -80,8 +80,8 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 2.6928754, g: 0.42114973, b: 0.17783101, a: 1}
+    - _Color: {r: 0.45202065, g: 1.8049959, b: 2.1295192, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _Speed: {r: 0.06, g: -0.35, b: 0, a: 0}
-    - _TilingOffset: {r: 0.9, g: -0.71, b: 0, a: 0}
+    - _Speed: {r: 0.44, g: -0.39, b: 0, a: 0}
+    - _TilingOffset: {r: 0.68, g: -0.71, b: 0, a: 0}
   m_BuildTextureStacks: []

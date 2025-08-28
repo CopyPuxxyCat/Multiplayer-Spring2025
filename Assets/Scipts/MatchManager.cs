@@ -335,7 +335,6 @@ public class MatchManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public override void OnLeftRoom()
     {
-        Debug.Log("goi ben match");
         base.OnLeftRoom();
         /// when match ends, leave room
         SceneManager.LoadScene(0);

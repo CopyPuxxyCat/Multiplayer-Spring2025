@@ -38,11 +38,15 @@ public class WaterSkillController : MonoBehaviourPun, ISkillBlocker
 
     public bool isSkillEnabled { get; set; }
 
+    private void Awake()
+    {
+        waterStats = GetComponent<WaterStats>();
+    }
+
     void Start()
     {
         if (!photonView.IsMine) return;
 
-        waterStats = GetComponent<WaterStats>();
         cam = Camera.main;
         playerController = GetComponent<PlayerController>();
         isSkillEnabled = false;
@@ -132,8 +136,8 @@ public class WaterSkillController : MonoBehaviourPun, ISkillBlocker
             if (isShieldHeal) photonView.RPC("RPC_AddArmor", photonView.Owner, waterStats.selfShieldAmount);
             else photonView.RPC("RPC_AddHealth", photonView.Owner, waterStats.selfHealAmount);
 
-            if (isShieldHeal) photonView.RPC("PlayShieldEffect", photonView.Owner);
-            else photonView.RPC("PlayHealEffect", photonView.Owner);
+            if (isShieldHeal) photonView.RPC("PlayShieldEffect", RpcTarget.All);
+            else photonView.RPC("PlayHealEffect", RpcTarget.All);
 
             EndHealMode();
         }
@@ -206,8 +210,19 @@ public class WaterSkillController : MonoBehaviourPun, ISkillBlocker
 
     public bool ShouldBlockShooting => isHoldingOrb || isAimingWave;
 
-    [PunRPC] public void PlayHealEffect() => StartCoroutine(PlayEffectRoutine(healEffect, waterStats.healEffectDuration));
-    [PunRPC] public void PlayShieldEffect() => StartCoroutine(PlayEffectRoutine(shieldEffect, waterStats.healEffectDuration));
+    [PunRPC]
+    public void PlayHealEffect()
+    {
+        if (healEffect == null || waterStats == null) return;
+        StartCoroutine(PlayEffectRoutine(healEffect, waterStats.healEffectDuration));
+    }
+
+    [PunRPC]
+    public void PlayShieldEffect()
+    {
+        if (shieldEffect == null || waterStats == null) return;
+        StartCoroutine(PlayEffectRoutine(shieldEffect, waterStats.healEffectDuration));
+    }
 
     IEnumerator PlayEffectRoutine(GameObject obj, float duration)
     {

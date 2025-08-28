@@ -1,6 +1,7 @@
 using UnityEngine;
 using Photon.Pun;
 using System.Collections.Generic;
+using System.Collections;
 
 public class JettController : MonoBehaviourPun, ISkillBlocker
 {
@@ -50,6 +51,16 @@ public class JettController : MonoBehaviourPun, ISkillBlocker
     private Vector3 velocity;
     private bool isGrounded = true;
 
+    [Header("Effect")]
+    [SerializeField] GameObject dashEffect;
+    [SerializeField] GameObject updraftEffect;
+    [SerializeField] GameObject jetUltimateEffect;
+
+    private void Awake()
+    {
+        jettStats = GetComponent<JettStats>();
+    }
+
     void Start()
     {
         if (!photonView.IsMine) return;
@@ -57,7 +68,6 @@ public class JettController : MonoBehaviourPun, ISkillBlocker
         isSkillEnabled = false;
 
         playerController = GetComponent<PlayerController>();
-        jettStats = GetComponent<JettStats>();
         playerCamera = Camera.main;
 
         var ui = UIController.instance;
@@ -151,6 +161,7 @@ public class JettController : MonoBehaviourPun, ISkillBlocker
         if (!photonView.IsMine || !dashUI.CanUse) return;
 
         dashUI.TriggerUse();
+        photonView.RPC("PlayDashEffect", RpcTarget.All);
         isDashing = true;
         dashStartTime = Time.time;
         dashAttempts++;
@@ -237,6 +248,7 @@ public class JettController : MonoBehaviourPun, ISkillBlocker
         if (!photonView.IsMine || !updraftUI.CanUse) return;
 
         updraftUI.TriggerUse();
+        photonView.RPC("PlayUpdrafEffect", RpcTarget.All);
         isUpdrafting = true;
         lastTimeUpdrafted = Time.time;
         updraftAttempts++;
@@ -259,7 +271,8 @@ public class JettController : MonoBehaviourPun, ISkillBlocker
 
         if (photonView.IsMine)
         {
-            if(isActive == true)
+            photonView.RPC("PlayJetUltimateEffect", RpcTarget.All);
+            if (isActive == true)
             {
                 foreach (Gun gun in playerController.AllGuns)
                     gun.gameObject.SetActive(!isActive);
@@ -321,6 +334,35 @@ public class JettController : MonoBehaviourPun, ISkillBlocker
         smokeUI.Initialize();
         updraftUI.Initialize();
         ultimateUI.Initialize();
+    }
+
+    float effectDuration = 1f;
+
+    [PunRPC]
+    public void PlayDashEffect()
+    {
+        if (dashEffect == null || jettStats == null) return;
+        StartCoroutine(PlayEffectRoutine(dashEffect, effectDuration));
+    }
+    [PunRPC]
+    public void PlayUpdrafEffect()
+    {
+        if (updraftEffect == null || jettStats == null) return;
+        StartCoroutine(PlayEffectRoutine(updraftEffect, effectDuration));
+    }
+    [PunRPC]
+    public void PlayJetUltimateEffect()
+    {
+        if (jetUltimateEffect == null || jettStats == null) return;
+        StartCoroutine(PlayEffectRoutine(jetUltimateEffect, effectDuration));
+    }
+
+    IEnumerator PlayEffectRoutine(GameObject obj, float duration)
+    {
+        if (obj == null) yield break;
+        obj.SetActive(true);
+        yield return new WaitForSeconds(duration);
+        obj.SetActive(false);
     }
     #endregion
 }
