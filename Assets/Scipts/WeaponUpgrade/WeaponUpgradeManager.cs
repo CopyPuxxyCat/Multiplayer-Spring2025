@@ -205,4 +205,138 @@ public class WeaponUpgradeManager : MonoBehaviour
 
         public UpgradeData Clone() => new UpgradeData { damage = damage, fireRate = fireRate, heat = heat };
     }
+
+    #region save and load gun data
+
+    public void SaveBuild()
+    {
+        var build = new SavedBuild
+        {
+            armorSmall = armorSmall,
+            armorBig = armorBig
+        };
+
+        foreach (var kv in currentUpgrades)
+        {
+            build.guns.Add(new GunUpgrade
+            {
+                gunName = kv.Key.gunData.gunName,
+                damage = kv.Value.damage,
+                fireRate = kv.Value.fireRate,
+                heat = kv.Value.heat
+            });
+        }
+
+        string json = JsonUtility.ToJson(build);
+
+        PlayFab.PlayFabClientAPI.UpdateUserData(new PlayFab.ClientModels.UpdateUserDataRequest
+        {
+            Data = new Dictionary<string, string> { { "SavedBuild", json } }
+        },
+        res => Debug.Log("Build saved to PlayFab."),
+        err => Debug.LogError("Save build failed: " + err.GenerateErrorReport()));
+    }
+
+    public void LoadBuild()
+    {
+        PlayFab.PlayFabClientAPI.GetUserData(new PlayFab.ClientModels.GetUserDataRequest(),
+        res =>
+        {
+            if (res.Data != null && res.Data.ContainsKey("SavedBuild"))
+            {
+                var build = JsonUtility.FromJson<SavedBuild>(res.Data["SavedBuild"].Value);
+
+                int totalCost = 0;
+
+                foreach (var gunUpgrade in build.guns)
+                {
+                    foreach (var gun in indexToGun.Values)
+                    {
+                        if (gun.gunData.gunName == gunUpgrade.gunName)
+                        {
+                            var data = new UpgradeData
+                            {
+                                damage = gunUpgrade.damage,
+                                fireRate = gunUpgrade.fireRate,
+                                heat = gunUpgrade.heat
+                            };
+
+                            // Gán vào current + temp
+                            currentUpgrades[gun] = data.Clone();
+                            tempUpgrades[gun] = data.Clone();
+
+                            // Áp stats lên súng
+                            gun.ApplyUpgrades(data.damage, data.fireRate, data.heat);
+
+                            // Tính tổng chi phí cho các level
+                            totalCost += CalcUpgradeCost(data.damage);
+                            totalCost += CalcUpgradeCost(data.fireRate);
+                            totalCost += CalcUpgradeCost(data.heat);
+                        }
+                    }
+                }
+
+                // Armor
+                int armor = 0;
+                if (build.armorSmall) { armor += 100; totalCost += smallArmorCost; }
+                if (build.armorBig) { armor += 200; totalCost += bigArmorCost; }
+                playerController.AddArmor(armor);
+
+                // Update UI ArmorButtons
+                foreach (var btn in UI.armorButtons)
+                {
+                    if (btn.armorType == ArmorButton.ArmorType.Small)
+                        btn.SetSelected(build.armorSmall);
+                    else if (btn.armorType == ArmorButton.ArmorType.Big)
+                        btn.SetSelected(build.armorBig);
+                }
+
+                // Trừ tiền
+                coinInStore = Mathf.Max(0, currencyManager.CurrentCoin - totalCost);
+                currencyManager.SetCoin(coinInStore);
+
+                // Refresh UI
+                UI.UpdateUI(coinInStore);
+                UI.RefreshLevels(); // <- cần viết trong UIWeaponUpgrade để update level nút
+
+                Debug.Log($"Build loaded! Cost: {totalCost}, Remaining Coin: {coinInStore}");
+            }
+            else
+            {
+                Debug.Log("No saved build found.");
+            }
+        },
+        err => Debug.LogError("Load build failed: " + err.GenerateErrorReport()));
+    }
+
+    public int GetCurrentCoin() => coinInStore;
+
+    // Hàm phụ tính chi phí upgrade
+    private int CalcUpgradeCost(int level)
+    {
+        int sum = 0;
+        for (int i = 0; i < level; i++)
+            sum += upgradeCosts[Mathf.Min(i, upgradeCosts.Length - 1)];
+        return sum;
+    }
+
+
+    // Helper
+    [System.Serializable]
+    public class SavedBuild
+    {
+        public List<GunUpgrade> guns = new();
+        public bool armorSmall;
+        public bool armorBig;
+    }
+
+    [System.Serializable]
+    public class GunUpgrade
+    {
+        public string gunName;
+        public int damage;
+        public int fireRate;
+        public int heat;
+    }
+    #endregion
 }

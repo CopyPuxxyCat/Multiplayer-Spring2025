@@ -1,6 +1,3 @@
-// =========================
-// UIWeaponUpgrade.cs (linked in Upgrade UI Panel)
-// =========================
 using UnityEngine;
 using TMPro;
 
@@ -16,5 +13,22 @@ public class UIWeaponUpgrade : MonoBehaviour
         foreach (var btn in upgradeButtons) btn.UpdateUI();
         foreach (var btn in armorButtons) btn.UpdateUI();
     }
-}
 
+    /// <summary>
+    /// Refresh toàn bộ UI sau khi load build
+    /// </summary>
+    public void RefreshLevels()
+    {
+        foreach (var btn in upgradeButtons)
+        {
+            btn.UpdateUI();
+        }
+
+        foreach (var armor in armorButtons)
+        {
+            armor.UpdateUI();
+        }
+
+        coinText.text = WeaponUpgradeManager.Instance.GetCurrentCoin().ToString("000000");
+    }
+}

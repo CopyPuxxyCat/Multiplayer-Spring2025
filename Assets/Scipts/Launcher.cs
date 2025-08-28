@@ -78,12 +78,13 @@ public class Launcher : MonoBehaviourPunCallbacks
         LoadingScreen.SetActive(true);
         LoadingText.text = "Connecting To Network...";
 
-        PhotonNetwork.ConnectUsingSettings();
-        PhotonNetwork.ConnectToRegion("asia"); // make sure every player in the same region
+        //PhotonNetwork.ConnectUsingSettings();
+        //PhotonNetwork.ConnectToRegion("asia"); // make sure every player in the same region
 
         if (!PhotonNetwork.IsConnected)
         {
-            PhotonNetwork.ConnectUsingSettings(); /// Uses photon server settings to connect to photon network
+            PhotonNetwork.ConnectUsingSettings();
+            PhotonNetwork.ConnectToRegion("asia");/// Uses photon server settings to connect to photon network
         }
 
 #if UNITY_EDITOR
@@ -572,6 +573,8 @@ public class Launcher : MonoBehaviourPunCallbacks
             {
                 foreach (var record in result.Data)
                 {
+                    if (!record.Key.StartsWith("Match")) continue;
+
                     var entry = JsonUtility.FromJson<HistoryEntry>(record.Value.Value);
 
                     GameObject go = Instantiate(HistoryItemPrefab, HistoryContent);

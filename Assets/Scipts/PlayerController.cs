@@ -617,6 +617,12 @@ public class PlayerController : MonoBehaviourPunCallbacks
         AllGuns[SelectedGun].MuzzleFlash.SetActive(false);
     }
 
+    IEnumerator DelaySwitchGun()
+    {
+        float delayTime = 0.5f;
+        yield return new WaitForSeconds(delayTime);
+    }    
+
     /// <summary>
     /// Set gun for all characters to be visible
     /// </summary>
@@ -627,7 +633,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         if(GunToSwitchTo < AllGuns.Length)
         {
             SelectedGun = GunToSwitchTo;
-            
+            StartCoroutine(DelaySwitchGun());
             SwitchGun();
         }
     }

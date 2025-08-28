@@ -1,6 +1,3 @@
-// =========================
-// ArmorButton.cs (for small/big armor)
-// =========================
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,4 +19,15 @@ public class ArmorButton : MonoBehaviour
     {
         buttonImage.color = isSelected ? Color.green : Color.white;
     }
+
+    /// <summary>
+    /// Dùng khi load build để set trạng thái đúng
+    /// </summary>
+    public void SetSelected(bool value)
+    {
+        isSelected = value;
+        UpdateUI();
+    }
+
+    public bool IsSelected() => isSelected;
 }
