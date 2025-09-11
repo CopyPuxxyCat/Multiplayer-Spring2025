@@ -2,6 +2,7 @@ using UnityEngine;
 using PlayFab;
 using PlayFab.ClientModels;
 using Photon.Pun;
+using System.Collections.Generic;
 
 public class PlayFabLogin : MonoBehaviour
 {
@@ -83,15 +84,26 @@ public class PlayFabLogin : MonoBehaviour
 
         PlayFabClientAPI.RegisterPlayFabUser(request,
             result => {
-                Debug.Log("Đăng ký thành công, PlayFabId : " + result.PlayFabId);
+                Debug.Log("Đăng ký thành công, PlayFabId: " + result.PlayFabId);
 
-                // Sau khi đăng ký xong là user đã đăng nhập rồi, có thể gọi UpdateContactEmail luôn
-                UpdateContactEmail(email);
+                // Gọi UpdateContactEmail và xử lý kết quả
+                UpdateContactEmail(email, success => {
+                    if (success)
+                    {
+                        Debug.Log("Email verification request sent successfully to: " + email);
+                        Launcher.Instance.ShowEmailVerificationPrompt(false); // Hiển thị prompt yêu cầu xác thực
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Failed to send verification email. User may need to verify manually.");
+                        Launcher.Instance.ShowError(Launcher.Instance.RegisterGmail, "Gửi email xác thực thất bại. Vui lòng kiểm tra lại.");
+                    }
 
-                // Set nickname cho Photon
-                PhotonNetwork.NickName = playername;
-                PlayerPrefs.SetString("PlayerName", playername);
-                Launcher.Instance.OpenThisPanel(Launcher.Instance.LoginPanel);
+                    // Set nickname cho Photon
+                    PhotonNetwork.NickName = playername;
+                    PlayerPrefs.SetString("PlayerName", playername);
+                    Launcher.Instance.OpenThisPanel(Launcher.Instance.LoginPanel);
+                });
             },
             error =>
             {
@@ -104,6 +116,25 @@ public class PlayFabLogin : MonoBehaviour
             });
     }
 
+    // Hàm UpdateContactEmail được điều chỉnh để trả về callback
+    private void UpdateContactEmail(string email, System.Action<bool> onComplete)
+    {
+        var request = new AddOrUpdateContactEmailRequest
+        {
+            EmailAddress = email
+        };
+
+        PlayFabClientAPI.AddOrUpdateContactEmail(request,
+            result => {
+                Debug.Log("Verification email sent to: " + email);
+                onComplete?.Invoke(true); // Gửi thành công
+            },
+            error => {
+                Debug.LogError("Failed to add/update contact email: " + error.GenerateErrorReport());
+                onComplete?.Invoke(false); // Gửi thất bại
+            });
+    }
+
 
     public void LoginWithEmail(string email, string password)
     {
@@ -113,28 +144,67 @@ public class PlayFabLogin : MonoBehaviour
             Password = password,
             InfoRequestParameters = new GetPlayerCombinedInfoRequestParams
             {
-                GetPlayerProfile = true
+                GetPlayerProfile = true,
+                ProfileConstraints = new PlayerProfileViewConstraints { ShowContactEmailAddresses = true } // Yêu cầu thêm thông tin email
             }
         };
 
         PlayFabClientAPI.LoginWithEmailAddress(request,
             result => {
                 Debug.Log("Login bằng email thành công! PlayFabId: " + result.PlayFabId);
-                // lấy DisplayName để làm PhotonNetwork.NickName
-                string displayName = result.InfoResultPayload?.PlayerProfile?.DisplayName;
 
-                if (!string.IsNullOrEmpty(displayName))
+                // Lấy PlayFabId từ kết quả đăng nhập
+                string playFabId = result.PlayFabId;
+
+                // Kiểm tra trạng thái xác thực trực tiếp từ InfoResultPayload (nếu bật Contact email addresses)
+                if (result.InfoResultPayload != null && result.InfoResultPayload.PlayerProfile != null)
                 {
-                    PhotonNetwork.NickName = displayName;
-                    PlayerPrefs.SetString("PlayerName", displayName);
-                }
-                else
-                {
-                    PhotonNetwork.NickName = "Player" + Random.Range(1000, 9999);
+                    var contactEmails = result.InfoResultPayload.PlayerProfile.ContactEmailAddresses;
+                    if (contactEmails != null && contactEmails.Count > 0)
+                    {
+                        bool isEmailVerified = contactEmails[0].VerificationStatus.ToString() == "Confirmed"; // Hoặc dùng EmailVerified nếu có
+                        Debug.Log("Direct verification status: " + contactEmails[0].VerificationStatus + " -> isVerified: " + isEmailVerified);
+
+                        HandleLoginResult(isEmailVerified, result);
+                        return; // Thoát nếu đã xử lý
+                    }
                 }
 
-                Launcher.Instance.OpenThisPanel(Launcher.Instance.MenuButtons);
-                Launcher.Instance.HasSetNickName = true;
+                // Nếu không có dữ liệu email từ client, gọi CloudScript
+                PlayFabClientAPI.ExecuteCloudScript(new ExecuteCloudScriptRequest
+                {
+                    FunctionName = "CheckEmailVerificationStatus",
+                    FunctionParameter = new { playFabId = playFabId }
+                },
+                cloudResult => {
+                    if (cloudResult == null || cloudResult.FunctionResult == null)
+                    {
+                        Debug.LogError("CloudScript function returned null.");
+                        Launcher.Instance.ShowError(Launcher.Instance.LoginGmail, "Lỗi khi kiểm tra tài khoản.");
+                        return;
+                    }
+
+                    var cloudData = (IDictionary<string, object>)cloudResult.FunctionResult;
+
+                    if (!cloudData.ContainsKey("isVerified"))
+                    {
+                        Debug.LogError("CloudScript result does not contain 'isVerified' key.");
+                        Launcher.Instance.ShowError(Launcher.Instance.LoginGmail, "Lỗi khi kiểm tra dữ liệu tài khoản.");
+                        return;
+                    }
+
+                    string debugMessage = cloudData.ContainsKey("debugMessage") ? cloudData["debugMessage"].ToString() : "No debug message.";
+                    Debug.Log("CloudScript Debug Info: " + debugMessage);
+
+                    bool isEmailVerified = (bool)cloudData["isVerified"];
+                    Debug.Log("Email verification status: " + isEmailVerified);
+
+                    HandleLoginResult(isEmailVerified, result);
+                },
+                cloudError => {
+                    Debug.LogError("Failed to check email verification status via CloudScript: " + cloudError.GenerateErrorReport());
+                    Launcher.Instance.ShowError(Launcher.Instance.LoginGmail, "Lỗi khi kiểm tra trạng thái tài khoản.");
+                });
             },
             error =>
             {
@@ -153,20 +223,34 @@ public class PlayFabLogin : MonoBehaviour
             });
     }
 
-    private void UpdateContactEmail(string email)
+    // Hàm xử lý kết quả login để tránh lặp code
+    private void HandleLoginResult(bool isEmailVerified, LoginResult result)
     {
-        var request = new AddOrUpdateContactEmailRequest
+        if (isEmailVerified)
         {
-            EmailAddress = email
-        };
+            // Đã xác thực, cho phép vào game
+            string displayName = result.InfoResultPayload?.PlayerProfile?.DisplayName;
 
-        PlayFabClientAPI.AddOrUpdateContactEmail(request,
-            result => {
-                Debug.Log("Verification email sent to: " + email);
-            },
-            error => {
-                Debug.LogError("Failed to add/update contact email: " + error.GenerateErrorReport());
-            });
+            if (!string.IsNullOrEmpty(displayName))
+            {
+                PhotonNetwork.NickName = displayName;
+                PlayerPrefs.SetString("PlayerName", displayName);
+            }
+            else
+            {
+                PhotonNetwork.NickName = "Player" + Random.Range(1000, 9999);
+            }
+
+            // Mở màn hình chính
+            Launcher.Instance.OpenThisPanel(Launcher.Instance.MenuButtons);
+            Launcher.Instance.HasSetNickName = true;
+        }
+        else
+        {
+            // Chưa xác thực, hiển thị thông báo lỗi
+            Launcher.Instance.ShowError(Launcher.Instance.LoginGmail, "Email chưa được xác thực (Pending). Vui lòng kiểm tra email và click link xác thực.");
+            Launcher.Instance.ShowEmailVerificationPrompt(false);
+        }
     }
 
     /// <summary>

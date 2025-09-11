@@ -50,6 +50,11 @@ public class Launcher : MonoBehaviourPunCallbacks
     public TMP_InputField ForgotPasswordEmailField;
     public GameObject PasswordRecoverPanel;
 
+    [Header("UI Panels")]
+    public GameObject EmailVerificationPanel;
+    public TMP_Text VerificationText;
+    public TMP_Text VerificationStateText;
+
     #endregion
 
     #region Private Variables 
@@ -156,6 +161,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         SignUpPanel.SetActive(false);
         PasswordRecoverPanel.SetActive(false);
         HistoryPanel.SetActive(false);
+        EmailVerificationPanel.SetActive(false);
     }
 
     /// <summary>
@@ -657,6 +663,25 @@ public class Launcher : MonoBehaviourPunCallbacks
 
         errorText.text = message;
     }
+
+    public void ShowEmailVerificationPrompt(bool isverified)
+    {
+        EmailVerificationPanel.SetActive(true);
+        VerificationText.text = "Đăng ký thành công! Vui lòng kiểm tra email của bạn để xác nhận tài khoản trước khi đăng nhập. Email có thể ở trong mục Spam. Dưới đây là trạng thái đã xác thực tài khoản chưa: ";
+        if (isverified == false)
+        {
+            VerificationStateText.text = "Chưa xác thực. Vui lòng kiểm tra Email. Email có thể ở trong mục Spam!";
+        }
+        else
+        {
+            VerificationStateText.text = "Đã xác thực. Bạn có thể đăng nhập bằng tài khoản này!";
+        }    
+    }
+
+    public void CloseShowEmailVerificationPrompt()
+    {
+        EmailVerificationPanel.SetActive(false);
+    }    
 
     private void ResetField(TMP_InputField field)
     {
